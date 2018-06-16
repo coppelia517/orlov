@@ -1,7 +1,5 @@
 {
     "editor.formatOnSave": true,
-    "python.linting.enabled": true,
-    "python.linting.lintOnSave": true,
     "python.formatting.provider": "yapf",
     "python.formatting.yapfArgs": [
         "--style",
@@ -24,6 +22,5 @@
         "**/build": true,
         "**/dist": true,
         "**/*.egg-info": true
-    },
-    "python.linting.pylintEnabled": false
+    }
 }
