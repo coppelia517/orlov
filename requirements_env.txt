@@ -16,6 +16,7 @@ MarkupSafe==1.0
 mccabe==0.6.1
 poyo==0.4.1
 pylint==1.9.2
+pylint-quotes==0.1.9
 python-dateutil==2.7.3
 requests==2.19.1
 six==1.11.0
