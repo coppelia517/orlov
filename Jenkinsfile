@@ -65,7 +65,7 @@ pipeline {
           python --version
           
           . ${VIRTUALENV}/bin/activate          
-          pylint .
+          pylint orlov
         """
       }
     }
