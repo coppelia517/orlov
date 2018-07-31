@@ -74,7 +74,6 @@ def getLogger(name=None, level=logging.DEBUG, fmt=BASE_FORMAT, filename=None):
     log.addHandler(__colored_console_handler(fmt, level))
     if filename is not None:
         log.addHandler(__file_handler(filename, fmt, level))
-    log.propagate = 0
     return log
 
 
