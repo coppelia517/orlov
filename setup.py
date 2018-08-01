@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """The setup script."""
 
 from setuptools import setup, find_packages
@@ -11,11 +10,15 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = []
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = [
+    'pytest-runner',
+]
 
-test_requirements = ['pytest', ]
+test_requirements = [
+    'pytest',
+]
 
 setup(
     author="Edith Coppelia",
@@ -47,4 +50,9 @@ setup(
     url='https://github.com/coppelia517/orlov',
     version='0.1.0',
     zip_safe=False,
+    entry_points={
+        'pytest11': [
+            'pytest_orlov = orlov.plugins',
+        ],
+    },
 )
