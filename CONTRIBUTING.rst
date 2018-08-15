@@ -38,8 +38,8 @@ and "help wanted" is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-Orlov Automation Project could always use more documentation, whether as part of the
-official Orlov Automation Project docs, in docstrings, or even on the web in blog posts,
+Orlov Testing Framework could always use more documentation, whether as part of the
+official Orlov Testing Framework docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 Submit Feedback
@@ -111,8 +111,8 @@ Tips
 
 To run a subset of tests::
 
+$ py.test tests.test_orlov
 
-    $ python -m unittest tests.test_orlov
 
 Deploying
 ---------

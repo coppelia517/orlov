@@ -1,4 +1,4 @@
-Welcome to Orlov Automation Project's documentation!
+Welcome to Orlov Testing Framework's documentation!
 ======================================
 
 .. toctree::

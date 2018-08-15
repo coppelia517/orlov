@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Orlov Automation Project'
+project = u'Orlov Testing Framework'
 copyright = u"2018, Edith Coppelia"
 author = u"Edith Coppelia"
 
@@ -78,7 +78,6 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
-
 # -- Options for HTML output -------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -97,12 +96,10 @@ html_theme = 'alabaster'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-
 # -- Options for HTMLHelp output ---------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'orlovdoc'
-
 
 # -- Options for LaTeX output ------------------------------------------
 
@@ -128,22 +125,14 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass
 # [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'orlov.tex',
-     u'Orlov Automation Project Documentation',
-     u'Edith Coppelia', 'manual'),
+    (master_doc, 'orlov.tex', u'Orlov Testing Framework Documentation', u'Edith Coppelia', 'manual'),
 ]
-
 
 # -- Options for manual page output ------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'orlov',
-     u'Orlov Automation Project Documentation',
-     [author], 1)
-]
-
+man_pages = [(master_doc, 'orlov', u'Orlov Testing Framework Documentation', [author], 1)]
 
 # -- Options for Texinfo output ----------------------------------------
 
@@ -151,13 +140,6 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'orlov',
-     u'Orlov Automation Project Documentation',
-     author,
-     'orlov',
-     'One line description of project.',
+    (master_doc, 'orlov', u'Orlov Testing Framework Documentation', author, 'orlov', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

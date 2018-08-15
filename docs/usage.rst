@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use Orlov Automation Project in a project::
+To use Orlov Testing Framework in a project::
 
     import orlov

@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install Orlov Automation Project, run this command in your terminal:
+To install Orlov Testing Framework, run this command in your terminal:
 
 .. code-block:: console
 
     $ pip install orlov
 
-This is the preferred method to install Orlov Automation Project, as it will always install the most recent stable release.
+This is the preferred method to install Orlov Testing Framework, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,7 +26,7 @@ you through the process.
 From sources
 ------------
 
-The sources for Orlov Automation Project can be downloaded from the `Github repo`_.
+The sources for Orlov Testing Framework can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 

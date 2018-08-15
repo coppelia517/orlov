@@ -54,13 +54,21 @@ lint: ## check style with flake8
 	flake8 orlov tests
 
 test: ## run tests quickly with the default Python
+<<<<<<< HEAD
 	python setup.py test
+=======
+	py.test
+>>>>>>> origin/master
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
+<<<<<<< HEAD
 	coverage run --source orlov setup.py test
+=======
+	coverage run --source orlov -m pytest
+>>>>>>> origin/master
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html

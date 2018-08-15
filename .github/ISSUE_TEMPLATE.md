@@ -1,4 +1,4 @@
-* Orlov Automation Project version:
+* Orlov Testing Framework version:
 * Python version:
 * Operating System:
 

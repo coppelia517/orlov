@@ -1,29 +1,30 @@
-""" Orlov is Multi-Platform Automation Testing Framework. """
+""" orlov base module : exceptions. """
 import sys
 import traceback
+from typing import Dict
 
-from orlov import STRING_SET
+STRING_SET = [bytes, str]
 
 
 class OrlovError(Exception):
     """
     Orlov Exception Base Class.
     """
-
     details = None  # {<string>:<base type>, ... }
 
     def __init__(self, details):
-        super(OrlovError, self).__init__()
-        if not isinstance(details, dict):
-            raise Exception('OrlovError : details must be a dictionary.')
+        if not isinstance(details) == dict:
+            raise Exception('Orlov Error : details must be a dictionary.')
         for key in details:
-            if not isinstance(key, STRING_SET):
-                raise Exception('OrlovError : details key must be strings.')
+            if isinstance(key) not in STRING_SET:
+                raise Exception('Orlov Error : details key must be strings.')
         if 'message' not in details:
-            raise Exception('OrlovError  details must have message field.')
+            raise Exception('Orlov Error : details must have "message" field.')
         if 'type' not in details:
             details['type'] = type(self).__name__
+
         self.details = details
+        super(OrlovError, self).__init__(self.details['message'])
 
     def __str__(self):
         message = self.message.encode('utf8')
@@ -33,31 +34,31 @@ class OrlovError(Exception):
             return '%s\n Server side traceback: \n%s' % (message, trace)
         return message
 
-    def __getattr__(self, attribute):
+    def __getattr__(self, attribute) -> str:
         return self.details[attribute]
 
     @property
-    def message(self):
+    def message(self) -> str:
         """
-        Get Message from OrlovError.
+        return message attribute.
         """
         return self.details['message']
 
-    def json(self):
+    def json(self) -> Dict[str, str]:
         """
-        Get Json from self.details in OrlovError.
+        return details format : json format.
         """
         return self.details
 
-    def has_trace(self):
+    def has_trace(self) -> str:
         """
-        Get traceback from OrlovError.
+        return trace attribute
         """
         return 'trace' in self.details and self.trace != None
 
-    def format_trace(self):
+    def format_trace(self) -> str:
         """
-        Get formated traceback from OrlovError.
+        return formated trace attribute.
         """
         if self.has_trace():
             convert = []
@@ -67,9 +68,9 @@ class OrlovError(Exception):
             return ''.join(formatted)
         return ''
 
-    def print_trace(self):
+    def print_trace(self) -> None:
         """
-        Print Stack Trace from OrlovError
+        print trace attribute.
         """
         sys.stderr.write(self.format_trace())
         sys.stderr.flush()
@@ -84,16 +85,5 @@ class RunError(OrlovError):
         details = {'cmd': cmd or '', 'ptyout': out or '', 'out': out or '', 'message': message or ''}
         OrlovError.__init__(self, details)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return '%s:\n%s:\n%s' % (self.cmd, self.message, self.out)
-
-
-class WorkspaceError(OrlovError):
-    """
-    Workspace Error
-    """
-
-    def __init__(self, details):
-        if isinstance(details, STRING_SET):
-            details = {'message': details}
-        OrlovError.__init__(self, details)

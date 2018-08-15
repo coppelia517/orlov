@@ -1,6 +1,9 @@
-========================
 Orlov Automation Project
 ========================
+=======
+=======================
+Orlov Testing Framework
+=======================
 
 
 .. image:: https://img.shields.io/pypi/v/orlov.svg
