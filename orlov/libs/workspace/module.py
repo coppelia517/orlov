@@ -11,8 +11,11 @@ L = logging.getLogger(__name__)
 
 
 class Workspace(object):
-    """
-    Orlov Workspace Module.
+    """Orlov Workspace Module.
+
+    Attributes:
+        path(str) : workspace base path.
+        clear(bool) : first time, workspace base folder cleared. default : False
     """
 
     def __init__(self, path, clear=False):

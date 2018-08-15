@@ -1,33 +1,47 @@
+""" Orlov is Multi-Platform Automation Testing Framework. """
 import os
 import re
 import sys
 import time
 import glob
+import logging
 import importlib
 
-PROFILE_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile"))
+PROFILE_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'profile'))
 if not PROFILE_PATH in sys.path:
     sys.path.insert(0, PROFILE_PATH)
 
-from stve.log import Log
-from stve.cmd import run, run_bg
-from stve.exception import *
+from orlov.cmd import run, run_bg
+from orlov.exception import *
 
 TIMEOUT = 30
 ADB_ROOT = os.path.normpath(os.path.dirname(__file__))
-L = Log.get(__name__)
+L = logging.getLogger(__name__)
 
 
 class AndroidBase(object):
+    """Android Basic Class.
+
+    Attributes:
+        profile(str) : android profile path. default : `~/profile`
+        host(str) : base path of profile. default : PROFILE_PATH
+    """
+
     def __init__(self, profile, host=PROFILE_PATH):
         self.WIFI = False
         self._set_profile(profile, host)
 
-    def _set_profile(self, name, host):
+    def _set_profile(self, name, host) -> None:
+        """Set Android Profile.
+
+        Args:
+            name(str) : android serial.
+            host(str) : base path of profile. default : PROFILE_PATH
+        """
         self.profile = None
         class_name = "_" + name
         if not os.path.exists(host):
-            L.warning("%s is not exists." % host)
+            L.warning("%s is not exists.", host)
             raise AndroidError("%s is not exists." % host)
         try:
             prof = None
