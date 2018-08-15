@@ -3,7 +3,7 @@ import sys
 import traceback
 from typing import Dict
 
-STRING_SET = [bytes, str]
+from orlov import STRING_SET
 
 
 class OrlovError(Exception):
@@ -87,3 +87,14 @@ class RunError(OrlovError):
 
     def __str__(self) -> str:
         return '%s:\n%s:\n%s' % (self.cmd, self.message, self.out)
+
+
+class WorkspaceError(OrlovError):
+    """
+    Workspace Error.
+    """
+
+    def __init__(self, details):
+        if type(details) in STRING_SET:
+            details = {'message': details}
+        StveError.__init__(self, details)

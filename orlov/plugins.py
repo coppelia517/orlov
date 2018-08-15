@@ -3,10 +3,12 @@ import logging
 import sys
 
 logger = logging.getLogger(__name__)
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.DEBUG)
-logger.setLevel(logging.DEBUG)
-logger.addHandler(handler)
+
+
+def pytest_addoption(parser):
+    """add commandline options"""
+    group = parser.getgroup('orlov workspace')
+    group.addoption('--result', action='store', dest='result', default='.', help='test result folder.')
 
 
 def pytest_runtest_setup(item):

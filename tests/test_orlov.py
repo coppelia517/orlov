@@ -1,10 +1,10 @@
 """Tests for `orlov` package."""
 import pytest
 import logging
-from orlov.log import getLogger
+# -from orlov.log import getLogger
 
-logger = getLogger(__name__)
-#logger = logging.getLogger(__name__)
+#logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 @pytest.mark.usefixtures('conftests_fixture', 'testcase_fixture')
@@ -27,3 +27,6 @@ class TestOrlov:
     def test_000_something(self):
         """Test something."""
         logger.info('test')
+        logger.info(self.workspace)
+        self.workspace.mkdir('tmp')
+        self.workspace.mkdir('report')

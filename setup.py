@@ -1,9 +1,15 @@
 """ Orlov is Multi-Platform Automation Testing Framework. """
 import os
+import codecs
 
 from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
+
+
+def read(filename):
+    return codecs.open(os.path.join(os.path.dirname(__file__), filename)).read()
+
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -89,9 +95,24 @@ def find_package_data(where='.',
     return out
 
 
+PACKAGE = 'orlov'
+NAME = 'orlov'
+DESCRIPTION = 'Python Boilerplate contains all the boilerplate you need to create a Python package.'
+AUTHOR = 'Edith Coppelia'
+AUTHOR_EMAIL = 'dev.coppelia@gmail.com'
+URL = 'https://github.com/coppelia517/orlov'
+VERSION = __import__(PACKAGE).__version__
+
 setup(
-    author='Edith Coppelia',
-    author_email='dev.coppelia@gmail.com',
+    name=NAME,
+    version=VERSION,
+    description=DESCRIPTION,
+    long_description=read("README.rst"),
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
+    url=URL,
+    packages=find_packages(exclude=["test.*", "test", "doc.*", "doc", "sample.*", "sample", "vendor"]),
+    package_data=find_package_data(PACKAGE, only_in_packages=False),
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -105,19 +126,12 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description="Python Boilerplate contains all the boilerplate you need to create a Python package.",
     install_requires=requirements,
-    license="MIT license",
-    long_description=readme + '\n\n' + history,
+    license='MIT license',
     include_package_data=True,
-    keywords='orlov',
-    name='orlov',
-    packages=find_packages(include=['orlov']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/coppelia517/orlov',
-    version='0.1.0',
     zip_safe=False,
     entry_points={
         'pytest11': [

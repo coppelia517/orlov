@@ -4,3 +4,5 @@
 __author__ = """Edith Coppelia"""
 __email__ = 'dev.coppelia@gmail.com'
 __version__ = '0.1.0'
+
+STRING_SET = (bytes, str)
