@@ -2,12 +2,13 @@
 import os
 import shutil
 import datetime
+import logging
 
 from orlov import STRING_SET
 from orlov.log import getLogger
 from orlov.exception import WorkspaceError
 
-L = getLogger(__name__)
+L = logging.getLogger(__name__)
 
 
 class Workspace(object):

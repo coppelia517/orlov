@@ -79,6 +79,7 @@ class RunError(OrlovError):
     """
     Runtime Error.
     """
+
     def __init__(self, cmd, out, message=''):
         details = {'cmd': cmd or '', 'ptyout': out or '', 'out': out or '', 'message': message or ''}
         OrlovError.__init__(self, details)
@@ -87,20 +88,11 @@ class RunError(OrlovError):
         return '%s:\n%s:\n%s' % (self.cmd, self.message, self.out)
 
 
-class LogError(OrlovError):
-    """
-    Logging Error
-    """
-    def __init__(self, details):
-        if isinstance(details, STRING_SET):
-            details = {'message': details}
-        OrlovError.__init__(self, details)
-
-
 class WorkspaceError(OrlovError):
     """
     Workspace Error
     """
+
     def __init__(self, details):
         if isinstance(details, STRING_SET):
             details = {'message': details}
