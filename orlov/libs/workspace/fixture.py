@@ -1,4 +1,4 @@
-""" Contains test fixtuers for the orlov testing framework """
+""" Orlov Module : workspace module fixture. """
 import os
 import logging
 
@@ -10,9 +10,11 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture(scope='session')
 def workspace(request) -> Workspace:
-    """
-    :yields: create workspace object.
-    :yield type: Workspace
+    """ Workspace Factory Fixture.
+
+    Yields:
+        Workspace : Workspace Created.
+
     """
     logger.debug('Setup of test structure.')
     # create screenshot directory

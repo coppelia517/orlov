@@ -3,7 +3,7 @@ import sys
 import traceback
 import subprocess
 
-from orlov.exception import STRING_SET
+from orlov import STRING_SET
 from orlov.exception import RunError
 
 
@@ -21,7 +21,7 @@ def run_bg(cmd, cwd=None, debug=False, shell=False):
         None.
 
     """
-    if shell is False and isinstance(cmd) in STRING_SET:
+    if shell is False and isinstance(cmd, STRING_SET):
         cmd = [c for c in cmd.split() if c != '']
     if debug:
         sys.stderr.write(''.join(cmd) + '\n')
@@ -50,7 +50,7 @@ def run(cmd, cwd=None, timeout=300, debug=False, shell=False):
     Arguments:
         cmd(str) : A string of program arguments.
         cwd(str) : Sets the current directory before the child is executed.
-        timeout(int) : Timeout Expired Time. default : 300.
+        timeout(int) : Expired Time. default : 300.
         debug(bool) : debug mode flag.
         shell(bool) : If true, the command will be executed through the shell.
 
@@ -60,7 +60,7 @@ def run(cmd, cwd=None, timeout=300, debug=False, shell=False):
         err(str) : Standard error.
 
     """
-    if shell is False and isinstance(cmd) in STRING_SET:
+    if shell is False and isinstance(cmd, STRING_SET):
         cmd = [c for c in cmd.split() if c != '']
     if debug:
         sys.stderr.write(''.join(cmd) + '\n')

@@ -1,4 +1,4 @@
-""" Orlov is Multi-Platform Automation Testing Framework. """
+""" Orlov Plugins : Adb Utility. """
 import os
 import re
 import sys
@@ -20,11 +20,12 @@ L = logging.getLogger(__name__)
 
 
 class AndroidBase(object):
-    """Android Basic Class.
+    """ Android Basic Class.
 
     Attributes:
         profile(str) : android profile path. default : `~/profile`
         host(str) : base path of profile. default : PROFILE_PATH
+
     """
 
     def __init__(self, profile, host=PROFILE_PATH):
@@ -32,11 +33,12 @@ class AndroidBase(object):
         self._set_profile(profile, host)
 
     def _set_profile(self, name, host) -> None:
-        """Set Android Profile.
+        """ Set Android Profile.
 
         Args:
             name(str) : android serial.
             host(str) : base path of profile. default : PROFILE_PATH
+
         """
         self.profile = None
         class_name = "_" + name
@@ -69,9 +71,22 @@ class AndroidBase(object):
             raise AndroidError(str(e))
 
     def get_profile(self):
+        """ Get Android Profile
+        """
         return self.profile
 
     def __exec(self, cmd, timeout=TIMEOUT, debug=False):
+        """ Execute Command for target android.
+
+        Arguments:
+            cmd(str) : A string of program arguments.
+            timeout(int) : Expired Time. default : 30.
+            debug(bool) : debug mode flag.
+
+        Returns:
+            result(str) : Standard Out or Standard Error
+
+        """
         L.debug(cmd)
         result = run(cmd, timeout=timeout, debug=debug)
         if result != None:
@@ -87,10 +102,20 @@ class AndroidBase(object):
         return result
 
     def __exec_bg(self, cmd, timeout=TIMEOUT, debug=False):
+        """ Execute Command background for target android.
+
+        Arguments:
+            cmd(str) : A string of program arguments.
+            timeout(int) : Expired Time. default : 30.
+            debug(bool) : debug mode flag.
+
+        """
         L.debug(cmd)
         run_bg(cmd, debug=debug)
 
     def _target(self):
+        """ Target settings.
+        """
         if not self.WIFI:
             return "-s %s" % (self.profile.SERIAL)
         else:
@@ -279,7 +304,7 @@ class Android(object):
 
     def reboot(self):
         self._adb.restart()
-        time.sleep(20)
+        time.sleep(60)
         while self.boot_completed() != "1":
             time.sleep(5)
 

@@ -7,16 +7,20 @@ from orlov import STRING_SET
 
 
 class OrlovError(Exception):
-    """
-    Orlov Exception Base Class.
+    """ Orlov Exception Base Class.
+
+    Attributes:
+        details({<string>:<base type>, ... }) : Exception details.
+            - details must have 2 members. 'message' and 'type'.
+
     """
     details = None  # {<string>:<base type>, ... }
 
     def __init__(self, details):
-        if not isinstance(details) == dict:
+        if not isinstance(details, Dict):
             raise Exception('Orlov Error : details must be a dictionary.')
         for key in details:
-            if isinstance(key) not in STRING_SET:
+            if not isinstance(key, STRING_SET):
                 raise Exception('Orlov Error : details key must be strings.')
         if 'message' not in details:
             raise Exception('Orlov Error : details must have "message" field.')
@@ -39,26 +43,37 @@ class OrlovError(Exception):
 
     @property
     def message(self) -> str:
-        """
-        return message attribute.
+        """ Return message attribute.
+
+        Returns:
+            message(str)
+
         """
         return self.details['message']
 
     def json(self) -> Dict[str, str]:
-        """
-        return details format : json format.
+        """ Return details format : json format.
+
+        Returns:
+            details({<string>:<base type>, ... })
         """
         return self.details
 
     def has_trace(self) -> str:
-        """
-        return trace attribute
+        """ Return trace attribute.
+
+        Returns:
+            trace(str)
+
         """
         return 'trace' in self.details and self.trace != None
 
     def format_trace(self) -> str:
-        """
-        return formated trace attribute.
+        """ Return formated trace attribute.
+
+        Returns:
+            formated trace(str)
+
         """
         if self.has_trace():
             convert = []
@@ -69,16 +84,20 @@ class OrlovError(Exception):
         return ''
 
     def print_trace(self) -> None:
-        """
-        print trace attribute.
+        """ Print trace attribute.
         """
         sys.stderr.write(self.format_trace())
         sys.stderr.flush()
 
 
 class RunError(OrlovError):
-    """
-    Runtime Error.
+    """ Runtime Error.
+
+    Attributes:
+        cmd(str) : Command Line Args invoked Runtime Error.
+        out(str) : Standard Out.
+        message(str) : Exception Messages.
+
     """
 
     def __init__(self, cmd, out, message=''):
@@ -90,11 +109,28 @@ class RunError(OrlovError):
 
 
 class WorkspaceError(OrlovError):
-    """
-    Workspace Error.
+    """ Workspace Error.
+
+    Attributes:
+        details(str) : Exception Messages.
+
     """
 
     def __init__(self, details):
         if type(details) in STRING_SET:
             details = {'message': details}
-        StveError.__init__(self, details)
+        OrlovError.__init__(self, details)
+
+
+class AndroidError(OrlovError):
+    """ Android Error.
+
+    Attributes:
+        details(str) : Exception Messages.
+
+    """
+
+    def __init__(self, details):
+        if type(details) in STRING_SET:
+            details = {'message': details}
+        OrlovError.__init__(self, details)

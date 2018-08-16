@@ -1,4 +1,4 @@
-""" Orlov is Multi-Platform Automation Testing Framework. """
+""" Orlov Plugins : Workspace Utility. """
 import os
 import shutil
 import datetime
@@ -43,14 +43,25 @@ class Workspace(object):
             os.mkdir(path)
 
     def root(self):
-        """
-        get Workspace Module Root.
+        """ Get Workspace Module Root.
+
+        Returns:
+            default_path(str)
+
         """
         return self.default_path
 
     def mkdir(self, folder, host='', clear=False):
-        """
-        mkdir Workspace. Default : Workspace Root.
+        """ Mkdir Workspace. Default : Workspace Root.
+
+        Arguments:
+            folder(str) : create folder name.
+            host(str) : base directory. default : '.'
+            clear(bool) : if true, create folder with clear all.
+
+        Returns:
+            path(str)
+
         """
         if not isinstance(folder, STRING_SET):
             raise WorkspaceError('folder must be strings.')
@@ -76,8 +87,15 @@ class Workspace(object):
         return path
 
     def rmdir(self, folder, host=''):
-        """
-        rmdir Workspace. Default : Workspace Root.
+        """ rmdir Workspace. Default : Workspace Root.
+
+        Arguments:
+            folder(str) : create folder name.
+            host(str) : base directory. default : '.'
+
+        Returns:
+            path(str)
+
         """
         if not isinstance(folder, STRING_SET):
             raise WorkspaceError('folder must be strings.')
@@ -102,8 +120,15 @@ class Workspace(object):
                 raise WorkspaceError('Could not remove file %s. Please Check File Permission.' % path)
 
     def touch(self, filename, host=''):
-        """
-        touch Workspace. Default : Workspace Root.
+        """ Touch Files in Workspace. Default : Workspace Root.
+
+        Arguments:
+            filename(str) : create filename.
+            host(str) : base directory. default : '.'
+
+        Returns:
+            filepath(str)
+
         """
         if not isinstance(filename, STRING_SET):
             raise WorkspaceError('filename must be strings.')
@@ -121,16 +146,28 @@ class Workspace(object):
         return filepath
 
     def unique(self, host=''):
-        """
-        make file unique Workspace. Default : Workspace Root.
+        """ Make file unique Workspace. Default : Workspace Root.
+
+        Arguments:
+            host(str) : base directory. default : '.'
+
+        Returns:
+            filepath(str)
+
         """
         d = datetime.datetime.today()
         dstr = d.strftime('%Y%m%d_%H%M%S')
         return self.touch(dstr, host=host)
 
     def rm(self, filepath):
-        """
-        rm file in Workspace. Default : Workspace Root.
+        """rm file in Workspace. Default : Workspace Root.
+
+        Arguments:
+            filepath(str) : remove filepath.
+
+        Returns:
+            filepath(str)
+
         """
         if not isinstance(filepath, STRING_SET):
             raise WorkspaceError('filepath must be strings.')

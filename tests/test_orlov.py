@@ -1,4 +1,5 @@
 """Tests for `orlov` package."""
+import os
 import pytest
 import logging
 # -from orlov.log import getLogger
@@ -28,5 +29,7 @@ class TestOrlov:
         """Test something."""
         logger.info('test')
         logger.info(self.workspace)
-        self.workspace.mkdir('tmp')
-        self.workspace.mkdir('report')
+        tmp = self.workspace.mkdir('tmp')
+        #self.workspace.mkdir('report')
+        logger.info(self.android)
+        self.android.reboot()
