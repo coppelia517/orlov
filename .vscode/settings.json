@@ -22,5 +22,7 @@
         "**/build": true,
         "**/dist": true,
         "**/*.egg-info": true
-    }
+    },
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\bash.exe",
+    "editor.fontFamily": "Inconsolata-dz for Powerline, Consolas, Menlo, Monaco, 'Courier New', monospace",
 }

@@ -9,8 +9,17 @@ from orlov.exception import RunError
 
 # pylint: disable=C0103
 def run_bg(cmd, cwd=None, debug=False, shell=False):
-    """
-    running command back ground.
+    """ Execute a child program in a new process.
+
+    Arguments:
+        cmd(str) : A string of program arguments.
+        cwd(str) : Sets the current directory before the child is executed.
+        debug(bool) : debug mode flag.
+        shell(bool) : If true, the command will be executed through the shell.
+
+    Returns:
+        None.
+
     """
     if shell is False and isinstance(cmd) in STRING_SET:
         cmd = [c for c in cmd.split() if c != '']
@@ -36,8 +45,20 @@ def run_bg(cmd, cwd=None, debug=False, shell=False):
 
 # pylint: disable=C0103
 def run(cmd, cwd=None, timeout=300, debug=False, shell=False):
-    """
-    running command.
+    """ Execute a child program in a new process.
+
+    Arguments:
+        cmd(str) : A string of program arguments.
+        cwd(str) : Sets the current directory before the child is executed.
+        timeout(int) : Timeout Expired Time. default : 300.
+        debug(bool) : debug mode flag.
+        shell(bool) : If true, the command will be executed through the shell.
+
+    Returns:
+        returncode(int) : status code.
+        out(str) : Standard out.
+        err(str) : Standard error.
+
     """
     if shell is False and isinstance(cmd) in STRING_SET:
         cmd = [c for c in cmd.split() if c != '']
