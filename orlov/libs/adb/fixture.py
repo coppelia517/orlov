@@ -1,5 +1,4 @@
 """ Orlov Plugin : adb module fixture. """
-import os
 import logging
 
 import pytest
@@ -13,8 +12,11 @@ logger = logging.getLogger(__name__)
 def android(request) -> Android:
     """ Android Factory Fixture.
 
+    Raises:
+        AndroidError: Could not find serial Number.
+
     Yields:
-        Android : Android Object created.
+        Android: Android Object created.
 
     """
     logger.debug('Setup : create Android Object.')

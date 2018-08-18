@@ -7,7 +7,7 @@ PATH = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.a
 if not PATH in sys.path:
     sys.path.insert(0, PATH)
 
-L = logginggetLogger(__name__)
+L = logging.getLogger(__name__)
 
 
 class MinicapService(object):
