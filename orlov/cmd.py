@@ -25,7 +25,7 @@ def run_bg(cmd, cwd=None, debug=False, shell=False):
         None: None
 
     """
-    if shell is False and isinstance(cmd, STRING_SET):
+    if not shell and isinstance(cmd, STRING_SET):
         cmd = [c for c in cmd.split() if c != '']
     if debug:
         sys.stderr.write(''.join(cmd) + '\n')
@@ -68,7 +68,7 @@ def run(cmd, cwd=None, timeout=300, debug=False, shell=False):
         err(str): Standard error.
 
     """
-    if shell is False and isinstance(cmd, STRING_SET):
+    if not shell and isinstance(cmd, STRING_SET):
         cmd = [c for c in cmd.split() if c != '']
     if debug:
         sys.stderr.write(''.join(cmd) + '\n')

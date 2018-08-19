@@ -102,7 +102,7 @@ class AndroidBase(object):
         result = run(cmd, timeout=timeout, debug=debug)
         if result != None:
             try:
-                if result[0] == 0:
+                if not result[0]:
                     result = result[1].replace('\r', '')
                 else:
                     L.warning(result[2].replace('\r', ''))

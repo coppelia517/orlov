@@ -1,5 +1,5 @@
+""" Orlov Plugins : Minicap Stream Utility. """
 import os
-import io
 import sys
 import socket
 import logging
@@ -15,13 +15,18 @@ L = logging.getLogger(__name__)
 
 
 def bytes_to_int(byte_data):
-    if type(byte_data) == int:
+    """ bytes_to_int utility.
+    """
+    if isinstance(byte_data, 'int'):
         return byte_data
     else:
         return int.from_bytes(byte_data, 'big')
 
 
 class Banner(object):
+    """ Minicap DataSet Object.
+    """
+
     def __init__(self):
         self.version = 0
         self.length = 0
@@ -34,18 +39,25 @@ class Banner(object):
         self.quirks = 0
 
     def __str__(self):
-        return "Banner [ Version = " + str(self.version) + \
-                      ", Length = " + str(self.length) + \
-                      ", PID = " + str(self.pid) + \
-                      ", RealWidth = " + str(self.real_width) + \
-                      ", RealHeight = " + str(self.real_height) + \
-                      ", VirthalWidth = " + str(self.virtual_width) + \
-                      ", VirthalHeight = " + str(self.virtual_height) + \
-                      ", Orientation = " + str(self.orientation) + \
-                      ", Quirks = " + str(self.quirks) + " ]"
+        return 'Banner [ Version = ' + str(self.version) + \
+                      ', Length = ' + str(self.length) + \
+                      ', PID = ' + str(self.pid) + \
+                      ', RealWidth = ' + str(self.real_width) + \
+                      ', RealHeight = ' + str(self.real_height) + \
+                      ', VirthalWidth = ' + str(self.virtual_width) + \
+                      ', VirthalHeight = ' + str(self.virtual_height) + \
+                      ', Orientation = ' + str(self.orientation) + \
+                      ', Quirks = ' + str(self.quirks) + ' ]'
 
 
 class MinicapStream(object):
+    """ Minicap Stream Utility
+
+    Attributes:
+        ip(str): server ip address.
+        port(str): server port.
+
+    """
     __instance = None
     __mutex = threading.Lock()
 
@@ -62,35 +74,75 @@ class MinicapStream(object):
         self.__flag = True
 
     @staticmethod
-    def get_builder(ip="127.0.0.1", port=1313):
-        if (MinicapStream.__instance == None):
+    def get_builder(ip='127.0.0.1', port=1313):
+        """ get stream builder.
+
+        Arguments:
+            ip(str): server ip address.
+            port(str): server port.
+
+        Returns:
+            target(MinicapStream): MinicapStream instance.
+
+        """
+        if MinicapStream.__instance is None:
             MinicapStream.__mutex.acquire()
-            if (MinicapStream.__instance == None):
+            if MinicapStream.__instance is None:
                 MinicapStream.__instance = MinicapStream(ip, port)
             MinicapStream.__mutex.release()
         return MinicapStream.__instance
 
     def get_ip(self):
+        """ get IP Address.
+
+        Returns:
+            ip(str): server ip address.
+
+        """
         return self.IP
 
     def get_port(self):
+        """ get Port.
+
+        Returns:
+            port(str): server port.
+
+        """
         return self.PORT
 
     def get_queue(self):
+        """ get picture queue object.
+
+        Returns:
+            queue(Queue): picture queue.
+
+        """
         return self.picture
 
     def get_d(self):
+        """ get picture queue size.
+
+        Returns:
+            size(int): picture queue size.
+
+        """
         return self.picture.qsize()
 
     def start(self):
+        """ start Minicap Stream.
+        """
         self.minicap_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.minicap_socket.connect((self.IP, self.PORT))
         self.read_image_stream_task = threading.Thread(target=self.read_image_stream).start()
 
     def finish(self):
+        """ call stop Minicap Stream.
+        """
         self.__flag = False
 
     def read_image_stream(self):
+        """ read Image Stream.
+        """
         read_banner_bytes = 0
         banner_length = 2
         read_frame_bytes = 0
@@ -102,11 +154,12 @@ class MinicapStream(object):
             # L.info("Picture Queue : %s" % (self.get_d()))
             reallen = self.minicap_socket.recv(4096)
             length = len(reallen)
-            if not length: continue
+            if not length:
+                continue
             cursor = 0
             while cursor < length:
                 if read_banner_bytes < banner_length:
-                    if read_banner_bytes == 0:
+                    if not read_banner_bytes:
                         self.banner.version = bytes_to_int(reallen[cursor])
                     elif read_banner_bytes == 1:
                         banner_length = bytes_to_int(reallen[cursor])
@@ -143,7 +196,8 @@ class MinicapStream(object):
                         if bytes_to_int(data_body[0]) != 0xFF or bytes_to_int(data_body[1]) != 0xD8:
                             return
                         self.picture.put(data_body)
-                        if self.get_d() > MAX_SIZE: self.picture.get()
+                        if self.get_d() > MAX_SIZE:
+                            self.picture.get()
                         cursor += frame_body_length
                         frame_body_length = 0
                         read_frame_bytes = 0
@@ -156,7 +210,7 @@ class MinicapStream(object):
                         cursor = length
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import time
     stream = MinicapStream.get_builder()
     stream.start()

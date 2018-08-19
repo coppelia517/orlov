@@ -46,7 +46,7 @@ class OrlovError(Exception):
         """ Return message attribute.
 
         Returns:
-            message(str)
+            message(str): messages
 
         """
         return self.details['message']
@@ -55,7 +55,7 @@ class OrlovError(Exception):
         """ Return details format : json format.
 
         Returns:
-            details({<string>:<base type>, ... })
+            details({<string>:<base type>, ... }): dict
         """
         return self.details
 
@@ -63,7 +63,7 @@ class OrlovError(Exception):
         """ Return trace attribute.
 
         Returns:
-            trace(str)
+            trace(str): trace
 
         """
         return 'trace' in self.details and self.trace != None
@@ -72,7 +72,7 @@ class OrlovError(Exception):
         """ Return formated trace attribute.
 
         Returns:
-            formated trace(str)
+            formated_trace(str): formated trace.
 
         """
         if self.has_trace():
@@ -117,7 +117,7 @@ class WorkspaceError(OrlovError):
     """
 
     def __init__(self, details):
-        if type(details) in STRING_SET:
+        if isinstance(details, STRING_SET):
             details = {'message': details}
         OrlovError.__init__(self, details)
 
@@ -131,6 +131,34 @@ class AndroidError(OrlovError):
     """
 
     def __init__(self, details):
-        if type(details) in STRING_SET:
+        if isinstance(details, STRING_SET):
+            details = {'message': details}
+        OrlovError.__init__(self, details)
+
+
+class PictureError(OrlovError):
+    """ Picture Error.
+
+    Attributes:
+        details(str) : Exception Messages.
+
+    """
+
+    def __init__(self, details):
+        if isinstance(details, STRING_SET):
+            details = {'message': details}
+        OrlovError.__init__(self, details)
+
+
+class OcrError(OrlovError):
+    """ OCR Error.
+
+    Attributes:
+        details(str) : Exception Messages.
+
+    """
+
+    def __init__(self, details):
+        if isinstance(details, STRING_SET):
             details = {'message': details}
         OrlovError.__init__(self, details)

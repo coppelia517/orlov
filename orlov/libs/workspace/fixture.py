@@ -13,7 +13,7 @@ def workspace(request) -> Workspace:
     """ Workspace Factory Fixture.
 
     Yields:
-        Workspace : Workspace Created.
+        directory(Workspace): Workspace Created.
 
     """
     logger.debug('Setup of test structure.')
