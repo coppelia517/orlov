@@ -10,9 +10,7 @@ from queue import Queue
 import cv2
 from PIL import Image
 import numpy as np
-
-from orlov.exception import *
-from orlov.cmd import run
+import fasteners
 
 PATH = os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if not PATH in sys.path:
@@ -22,21 +20,23 @@ MAX_SIZE = 5
 L = logging.getLogger(__name__)
 
 
-class PatternMatchObject(object):
-    """ Pattern Match Object.
+class SearchObject(object):
+    """ Search Object.
 
     Attributes:
+        function(str): target get function.
         target(str): target image filepath.
         box(tuple): target position(x, y)
 
     """
 
-    def __init__(self, _target, _box):
+    def __init__(self, _function, _target, _box):
+        self.func = _function
         self.target = _target
         self.box = _box
 
     def __repr__(self):
-        return 'PatternMatchObject()'
+        return 'SearchObject()'
 
     def __str__(self):
         return 'Target, Box : %s, %s' % (os.path.basename(self.target), self.box)
@@ -54,101 +54,123 @@ class MinicapProc(object):
     """
 
     def __init__(self, _stream, _service, debug=False):
-        self.stream = _stream
-        self.service = _service
+        self.module = {}
+        self.module['stream'] = _stream
+        self.module['service'] = _service
+
+        self.space = {}
+
         self.output = Queue()
         self._loop_flag = True
         self._debug = debug
 
-        self._pattern_match = None
-        self.patternmatch_result = Queue()
-
-        self._ocr = None
-        self.ocr_result = Queue()
-
-        self._capture = None
-        self.capture_result = Queue()
-
+        self._search = None
+        self.search_result = Queue()
         self.counter = 0
+        self.lock = fasteners.InterProcessLock('.lockfile')
 
-    def start(self, _adb, _log, _pic, _ocr=None):
+    def start(self, _adb, _workspace, _picture, _ocr=None):
         """ Minicap Process Start.
 
         Arguments:
-            adb(Android): android adaptor object.
-            log(str): log file path.
-            pic(Picture): picture module adaptor object.
-            ocr(Ocr): ocr module adaptor object.
+            _adb(Android): android adaptor object.
+            _workspace(Workspace): workspace adaptor object.
+                - log : workspace.log
+                - tmp : workspace.tmp
+                - evidence : workspace.tmp.evidence
+                - reference : workspace.tmp.reference
+            _picture(Picture): picture module adaptor object.
+            _ocr(Ocr): ocr module adaptor object.
 
         """
-        self.adb = _adb
-        self.pic = _pic
-        self.ocr = _ocr
-        self.service.start(self.adb, _log)
+        self.module['adb'] = _adb
+        self.module['workspace'] = _workspace
+        self.module['picture'] = _picture
+        self.module['ocr'] = _ocr
+
+        self.space['tmp'] = self.module['workspace'].mkdir('tmp')
+        self.space['log'] = self.module['workspace'].mkdir('log')
+        self.space['tmp.evidence'] = self.module['workspace'].mkdir('tmp\\evidence')
+        self.space['tmp.reference'] = self.module['workspace'].mkdir('tmp\\reference')
+
+        self.module['service'].start(self.module['adb'], self.space['log'])
         time.sleep(2)
-        self.adb.forward("tcp:%s localabstract:minicap" % str(self.stream.get_port()))
-        self.stream.start()
+        self.module['adb'].forward('tcp:%s localabstract:minicap' % str(self.module['stream'].get_port()))
+        self.module['stream'].start()
         time.sleep(1)
-        self.loop = threading.Thread(target=self.main_loop).start()
+        self.module['loop'] = threading.Thread(target=self.main_loop).start()
 
     def finish(self):
+        """ Minicap Process Finish.
+        """
         self._loop_flag = False
         time.sleep(2)
-        self.stream.finish()
+        self.module['stream'].finish()
         time.sleep(2)
-        if self.service != None:
-            self.service.stop()
+        if 'service' in self.module and self.module['service'] != None:
+            self.module['service'].stop()
 
-    def get_d(self):
+    def get_d(self) -> int:
+        """ Get output queue size.
+        """
         return self.output.qsize()
 
-    def get_frame(self):
+    def get_frame(self) -> object:
+        """ Get frame image in output.
+        """
         return self.output.get()
 
     def __save(self, filename, data):
-        with open(filename, "wb") as f:
+        """ Save framedata in files.
+
+        Arguments:
+            filename(str): saved filename.
+            data(object): save framedata.
+        
+        """
+        with open(filename, 'wb') as f:
             f.write(data)
             f.flush()
 
     def __save_cv(self, filename, img_cv):
+        """ Save framedata in files. (opencv)
+
+        Arguments:
+            filename(str): saved filename.
+            img_cv(numpy.ndarray): framedata(opencv).
+        
+        Returns:
+            filepath(str): filepath
+
+        """
         return cv2.imwrite(filename, img_cv)
 
     def __save_evidence(self, number, data):
-        number = int(number)
-        if number < 10: number = "0000%s" % str(number)
-        elif number < 100: number = "000%s" % str(number)
-        elif number < 1000: number = "00%s" % str(number)
-        elif number < 10000: number = "0%s" % str(number)
-        else: number = str(number)
-        self.__save_cv(os.path.join(TMP_EVIDENCE_DIR, "image_%s.png" % number), data)
+        """ Save Evidence Data.
 
-    def search_pattern(self, target, box=None, _timeout=5):
-        self._pattern_match = PatternMatchObject(target, box)
-        result = self.patternmatch_result.get(timeout=_timeout)
-        self._pattern_match = None
-        return result
+        Arguments:
+            number(int): counter number.
+            data(object): save framedata.
 
-    def search_ocr(self, box=None, _timeout=5):
-        self._ocr = PatternMatchObject("dummy", box)
-        result = self.ocr_result.get(timeout=_timeout)
-        self._ocr = None
+        """
+        zpnum = '{:0:08d}'.format(number)
+        if 'tmp.evidence' in self.space:
+            self.__save_cv(os.path.join(self.space['tmp.evidence'], "image_%s.png" % str(zpnum)), data)
+
+    def __search(self, func, target, box=None, _timeout=5):
+        """ Search Object.
+        """
+        self._search = SearchObject(func, target, box)
+        with self.lock:
+            result = self.search_result.get(timeout=_timeout)
+
+        self._search = None
         return result
 
     def capture_image(self, filename, _timeout=5):
-        self._capture = filename
-        self.capture_result.get(timeout=_timeout)
-        abspath = os.path.join(TMP_DIR, filename)
-        self._capture = None
-        return abspath
-
-    def create_video(self, src, dst, filename="output.mp4"):
-        output = os.path.join(dst, filename)
-        if os.path.exists(output):
-            os.remove(output)
-        cmd = r'%s -r 3 -i %s -an -vcodec libx264 -pix_fmt yuv420p %s' % (FFMPEG_BIN, os.path.join(
-            src, "image_%05d.png"), os.path.join(dst, filename))
-        L.debug(cmd)
-        return run(cmd)
+        result = self.__search('capture', filename, None)
+        L.info(result)
+        return result
 
     def main_loop(self):
         if self._debug:
@@ -160,26 +182,27 @@ class MinicapProc(object):
             image_pil = Image.open(io.BytesIO(data))
             image_cv = cv2.cvtColor(np.asarray(image_pil), cv2.COLOR_RGB2BGR)
 
-            if self._capture != None:
-                outputfile = os.path.join(TMP_DIR, self._capture)
-                result = self.__save_cv(outputfile, image_cv)
-                self.capture_result.put(result)
+            if self._search is not None:
+                if self._search.func == 'capture':
+                    outputfile = os.path.join(self.space['tmp'], self._search.target)
+                    result = self.__save_cv(outputfile, image_cv)
+                    self.search_result.put(result)
+                """
+                if self._pattern_match != None:
+                    if self.pic != None:
+                        result, image_cv = self.pic.search_pattern(image_cv, self._pattern_match.target,
+                                                                self._pattern_match.box, TMP_DIR)
+                        self.patternmatch_result.put(result)
+                        save_flag = True
 
-            if self._pattern_match != None:
-                if self.pic != None:
-                    result, image_cv = self.pic.search_pattern(image_cv, self._pattern_match.target,
-                                                               self._pattern_match.box, TMP_DIR)
-                    self.patternmatch_result.put(result)
-                    save_flag = True
-
-            if self._ocr != None:
-                if self.ocr != None:
-                    result, image_cv = self.ocr.img_to_string(image_cv, self._ocr.box, TMP_DIR)
-                    self.ocr_result.put(result)
-                    save_flag = True
-
-            #if self.counter % 5 == 0 or save_flag:
-            #    self.__save_evidence(self.counter / 5, image_cv)
+                if self._ocr != None:
+                    if self.ocr != None:
+                        result, image_cv = self.ocr.img_to_string(image_cv, self._ocr.box, TMP_DIR)
+                        self.ocr_result.put(result)
+                        save_flag = True
+                """
+            if self.counter % 5 == 0 or save_flag:
+                self.__save_evidence(self.counter / 5, image_cv)
 
             if self._debug:
                 if self.adb is None:
@@ -203,18 +226,3 @@ class MinicapProc(object):
             """
         if self._debug:
             cv2.destroyAllWindows()
-
-
-if __name__ == "__main__":
-    service = library.register(library.register(), LIB_DIR)
-    L.info(service)
-    adb = service["stve.android"].get("BH9037HP5U")
-
-    stream = service["aliez.stve.minicap"].get_stream("localhost", 1919)
-    proc = service["aliez.stve.minicap"].get_process(LOG_DIR)
-
-    main = MinicapProc(stream, proc, debug=True)
-    main.start(adb)
-    time.sleep(20)
-    main.finish()
-    main.create_video(TMP_EVIDENCE_DIR, TMP_VIDEO_DIR)

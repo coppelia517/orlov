@@ -1,11 +1,5 @@
-import os
-import sys
-
-PATH = os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-if not PATH in sys.path:
-    sys.path.insert(0, PATH)
-
-import android_base
+""" Orlov adb module : adb profile. """
+from orlov.libs.adb.profile import android_base
 
 
 class _BH9037HP5U(android_base.Android):

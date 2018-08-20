@@ -55,12 +55,12 @@ def pytest_runtest_makereport(item):
     logger.debug("Teardown of pytest_runtest_makereport")
     # outcome.excinfo may be None or a (cls, val, tb) tuple
 
-    res = outcome.get_result()  # will raise if outcome was exception
+    #res = outcome.get_result()  # will raise if outcome was exception
     # Pass the slaveinfo to report
-    res.slaveinput = getattr(item.config, "slaveinput", None)
+    #res.slaveinput = getattr(item.config, "slaveinput", None)
     # Store the result of each test phase, so it can be read by pytest_runtest_teardown hook when it runs.
-    if not hasattr(item, "rep_" + res.when):
-        setattr(item, "rep_" + res.when, res)
+    #if not hasattr(item, "rep_" + res.when):
+    #    setattr(item, "rep_" + res.when, res)
 
 
 def pytest_runtest_teardown(item):
@@ -74,11 +74,9 @@ def pytest_runtest_teardown(item):
     """
     logger.debug("Begin pytest_runtest_teardown")
 
-    if (hasattr(item, 'rep_setup') and item.rep_setup.failed) or (hasattr(item, 'rep_call') and item.rep_call.failed):
-        filename = "errorshot_{}_{}.png".format(item.name, time.strftime("%Y_%m_%d_%H_%M_%S"))
-        if hasattr(item.cls, "result_dir"):
-            filename = os.path.join(item.cls.result_dir, filename)
-            item.cls.driver.save_screenshot(filename)
-            logger.debug("Screenshot Captured on Test Failure.")
-        else:
-            logger.info("result_dir does not exist, screen shot not saved.")
+    #if (hasattr(item, 'rep_setup') and item.rep_setup.failed) or (hasattr(item, 'rep_call') and item.rep_call.failed):
+    #    filename = "errorshot_{}_{}.png".format(item.name, time.strftime("%Y_%m_%d_%H_%M_%S"))
+    #    if hasattr(item.cls, "result_dir"):
+    #        logger.debug("Screenshot Captured on Test Failure.")
+    #    else:
+    #        logger.info("result_dir does not exist, screen shot not saved.")
