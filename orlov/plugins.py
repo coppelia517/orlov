@@ -2,11 +2,17 @@
 import inspect
 import logging
 
+from orlov.libs.adb.fixture import android
+from orlov.libs.workspace.fixture import workspace
+
 logger = logging.getLogger(__name__)
 
 
 def pytest_addoption(parser):
     """add commandline options"""
+    group = parser.getgroup('orlov')
+    group.addoption('--orlov_debug', action='store_true', dest='orlov_debug', default=False, help='debug flag.')
+
     w_group = parser.getgroup('orlov workspace')
     w_group.addoption('--ws', '--workspace', action='store', dest='workspace', default='.', help='test base folder.')
 

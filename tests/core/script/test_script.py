@@ -1,4 +1,5 @@
 """ Test for orlov core packages. """
+import time
 import logging
 import pytest
 
@@ -19,9 +20,8 @@ class TestOrlov:
 
     def test_000_something(self):
         """Test something."""
-        logger.info('test')
         logger.info(self.workspace)
         tmp = self.workspace.mkdir('tmp')
-        #self.workspace.mkdir('report')
-        logger.info(self.android)
-        self.android.reboot()
+        log = self.workspace.mkdir('log')
+        self.minicap.start(self.android, log, self.picture, self.ocr)
+        time.sleep(10)

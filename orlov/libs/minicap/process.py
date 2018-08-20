@@ -71,14 +71,20 @@ class MinicapProc(object):
 
         self.counter = 0
 
-    def start(self, _adb, _pic, _ocr=None):
+    def start(self, _adb, _log, _pic, _ocr=None):
         """ Minicap Process Start.
-        
+
+        Arguments:
+            adb(Android): android adaptor object.
+            log(str): log file path.
+            pic(Picture): picture module adaptor object.
+            ocr(Ocr): ocr module adaptor object.
+
         """
         self.adb = _adb
         self.pic = _pic
         self.ocr = _ocr
-        self.service.start(self.adb)
+        self.service.start(self.adb, _log)
         time.sleep(2)
         self.adb.forward("tcp:%s localabstract:minicap" % str(self.stream.get_port()))
         self.stream.start()
@@ -172,8 +178,8 @@ class MinicapProc(object):
                     self.ocr_result.put(result)
                     save_flag = True
 
-            if self.counter % 5 == 0 or save_flag:
-                self.__save_evidence(self.counter / 5, image_cv)
+            #if self.counter % 5 == 0 or save_flag:
+            #    self.__save_evidence(self.counter / 5, image_cv)
 
             if self._debug:
                 if self.adb is None:

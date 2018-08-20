@@ -17,7 +17,7 @@ L = logging.getLogger(__name__)
 def bytes_to_int(byte_data):
     """ bytes_to_int utility.
     """
-    if isinstance(byte_data, 'int'):
+    if isinstance(byte_data, (int)):
         return byte_data
     else:
         return int.from_bytes(byte_data, 'big')

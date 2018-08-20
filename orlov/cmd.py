@@ -37,7 +37,7 @@ def run_bg(cmd, cwd=None, debug=False, shell=False):
             out = '{0}: {1}\n{2}'.format(type(e).__name__, e, traceback.format_exc())
             raise RunError(cmd, None, message='Raise Exception : %s' % out)
         except Exception as e:
-            if proc != None:
+            if proc is not None:
                 proc.kill()
             out = '{0}: {1}\n{2}'.format(type(e).__name__, e, traceback.format_exc())
             raise TimeoutError({'cmd': cmd, 'out': None, 'message': 'command %s is time out' % cmd})
@@ -85,7 +85,7 @@ def run(cmd, cwd=None, timeout=300, debug=False, shell=False):
             out = '{0}: {1}\n{2}'.format(type(e).__name__, e, traceback.format_exc())
             raise RunError(cmd, None, message='Raise Exception : %s' % out)
         except Exception as e:
-            if proc != None:
+            if proc is not None:
                 proc.kill()
             out = '{0}: {1}\n{2}'.format(type(e).__name__, e, traceback.format_exc())
             raise TimeoutError({'cmd': cmd, 'out': None, 'message': 'command %s is time out' % cmd})
