@@ -103,3 +103,4 @@ ENV/
 
 tests/**/tmp
 tests/**/report
+.lockfile

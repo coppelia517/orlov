@@ -66,7 +66,7 @@ class MinicapProc(object):
 
         self._search = None
         self.search_result = Queue()
-        self.counter = 0
+        self.counter = 1
         self.lock = fasteners.InterProcessLock('.lockfile')
 
     def start(self, _adb, _workspace, _picture, _ocr=None):
@@ -161,7 +161,7 @@ class MinicapProc(object):
             data(object): save framedata.
 
         """
-        zpnum = '{:0:08d}'.format(number)
+        zpnum = '{0:08d}'.format(int(number))
         if 'tmp.evidence' in self.space:
             self.__save_cv(os.path.join(self.space['tmp.evidence'], 'image_%s.png' % str(zpnum)), data)
 
@@ -198,9 +198,7 @@ class MinicapProc(object):
             result(str): filename
 
         """
-        result = self.__search('capture', filename, None)
-        L.info(result)
-        return result
+        return self.__search('capture', filename, None)
 
     def main_loop(self):
         """ Minicap Process Main Loop.
@@ -209,7 +207,7 @@ class MinicapProc(object):
             cv2.namedWindow('debug')
 
         while self._loop_flag:
-            data = self.stream.picture.get()
+            data = self.module['stream'].picture.get()
             save_flag = False
 
             image_pil = Image.open(io.BytesIO(data))
@@ -237,16 +235,16 @@ class MinicapProc(object):
                 else:
                     L.warning('Could not find function : %s', self._search.func)
 
-            if not self.counter % 5 or save_flag:
+            if (not self.counter % 5) or save_flag:
                 self.__save_evidence(self.counter / 5, image_cv)
 
             if self._debug:
-                if self.adb is None:
+                if self.module['adb'] is None:
                     resize_image_cv = cv2.resize(image_cv, (640, 360))
                 else:
-                    w = int(int(self.adb.get().MINICAP_WIDTH) / 2)
-                    h = int(int(self.adb.get().MINICAP_HEIGHT) / 2)
-                    if not int(self.adb.get().ROTATE):
+                    h = int(int(self.module['adb'].get().MINICAP_WIDTH) / 2)
+                    w = int(int(self.module['adb'].get().MINICAP_HEIGHT) / 2)
+                    if not int(self.module['adb'].get().ROTATE):
                         resize_image_cv = cv2.resize(image_cv, (h, w))
                     else:
                         resize_image_cv = cv2.resize(image_cv, (w, h))

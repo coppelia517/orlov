@@ -24,7 +24,10 @@ setup_requirements = []
 test_requirements = []
 
 standard_exclude = ['*.py', '*.pyc', '*$py.class', '*~', '.*', '*.bak']
-standard_exclude_directories = ['.*', 'CVS', '_darcs', './build', './dist', 'EGG-INFO', '*.egg-info', 'tests']
+standard_exclude_directories = [
+    '.*', 'CVS', '_darcs', './build', './dist', 'EGG-INFO', '*.egg-info', './tests', './test', './doc', './sample',
+    'vendor'
+]
 
 
 def find_package_data(where='.',
@@ -111,7 +114,8 @@ setup(
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     url=URL,
-    packages=find_packages(exclude=["test.*", "test", "doc.*", "doc", "sample.*", "sample", "vendor"]),
+    packages=find_packages(
+        exclude=["tests", "tests.*", "test.*", "test", "doc.*", "doc", "sample.*", "sample", "vendor"]),
     package_data=find_package_data(PACKAGE, only_in_packages=False),
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

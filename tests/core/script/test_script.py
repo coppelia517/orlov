@@ -21,7 +21,11 @@ class TestOrlov:
     def test_000_something(self):
         """Test something."""
         logger.info(self.workspace)
-        tmp = self.workspace.mkdir('tmp')
-        log = self.workspace.mkdir('log')
-        self.minicap.start(self.android, log, self.picture, self.ocr)
-        time.sleep(10)
+        self.minicap.start(self.android, self.workspace, self.picture, self.ocr)
+        time.sleep(5)
+        self.minicap.capture_image('tmp3_file.png')
+        self.minicap.capture_image('tmp_file.png')
+        self.minicap.capture_image('tmp1_file.png')
+        time.sleep(5)
+        self.minicap.capture_image('tmp2_file.png')
+        time.sleep(5)

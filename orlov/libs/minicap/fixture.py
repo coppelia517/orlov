@@ -53,7 +53,7 @@ def m_service(request) -> MinicapService:
 
 
 @pytest.fixture(scope='class')
-def minicap(request) -> MinicapProc:
+def minicap(request, m_stream, m_service) -> MinicapProc:
     """ MinicapProc Fixture.
     """
 
