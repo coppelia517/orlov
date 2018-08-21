@@ -98,7 +98,7 @@ class MinicapProc(object):
         self.module['adb'].forward('tcp:%s localabstract:minicap' % str(self.module['stream'].get_port()))
         self.module['stream'].start()
         time.sleep(1)
-        self.module['loop'] = threading.Thread(target=self.main_loop).start()
+        threading.Thread(target=self.main_loop).start()
 
     def finish(self):
         """ Minicap Process Finish.
@@ -107,16 +107,24 @@ class MinicapProc(object):
         time.sleep(2)
         self.module['stream'].finish()
         time.sleep(2)
-        if 'service' in self.module and self.module['service'] != None:
+        if 'service' in self.module and self.module['service'] is not None:
             self.module['service'].stop()
 
     def get_d(self) -> int:
         """ Get output queue size.
+
+        Returns:
+            size(int): output queue size.
+
         """
         return self.output.qsize()
 
     def get_frame(self) -> object:
         """ Get frame image in output.
+
+        Returns:
+            objects(object): image data.
+
         """
         return self.output.get()
 
@@ -126,19 +134,19 @@ class MinicapProc(object):
         Arguments:
             filename(str): saved filename.
             data(object): save framedata.
-        
+
         """
         with open(filename, 'wb') as f:
             f.write(data)
             f.flush()
 
-    def __save_cv(self, filename, img_cv):
+    def __save_cv(self, filename, img_cv) -> str:
         """ Save framedata in files. (opencv)
 
         Arguments:
             filename(str): saved filename.
             img_cv(numpy.ndarray): framedata(opencv).
-        
+
         Returns:
             filepath(str): filepath
 
@@ -155,26 +163,51 @@ class MinicapProc(object):
         """
         zpnum = '{:0:08d}'.format(number)
         if 'tmp.evidence' in self.space:
-            self.__save_cv(os.path.join(self.space['tmp.evidence'], "image_%s.png" % str(zpnum)), data)
+            self.__save_cv(os.path.join(self.space['tmp.evidence'], 'image_%s.png' % str(zpnum)), data)
 
-    def __search(self, func, target, box=None, _timeout=5):
+    def __search(self, func, target, box=None, _timeout=5) -> object:
         """ Search Object.
-        """
-        self._search = SearchObject(func, target, box)
-        with self.lock:
-            result = self.search_result.get(timeout=_timeout)
 
-        self._search = None
+        Arguments:
+            func(str): function name.
+                - capture, patternmatch, ocr.
+            target(object): Target Object. only capture, filename.
+            box(tuple): box object. (x, y, width, height)
+            _timeout(int): Expired Time. default : 5.
+
+        Returns:
+            result(object): return target.
+
+        """
+
+        with self.lock:
+            self._search = SearchObject(func, target, box)
+            result = self.search_result.get(timeout=_timeout)
+            self._search = None
+
         return result
 
-    def capture_image(self, filename, _timeout=5):
+    def capture_image(self, filename, _timeout=5) -> str:
+        """ Capture Image File.
+
+        Arguments:
+            filename(str): filename.
+            _timeout(int): Expired Time. default : 5.
+
+        Returns:
+            result(str): filename
+
+        """
         result = self.__search('capture', filename, None)
         L.info(result)
         return result
 
     def main_loop(self):
+        """ Minicap Process Main Loop.
+        """
         if self._debug:
-            cv2.namedWindow("debug")
+            cv2.namedWindow('debug')
+
         while self._loop_flag:
             data = self.stream.picture.get()
             save_flag = False
@@ -187,21 +220,24 @@ class MinicapProc(object):
                     outputfile = os.path.join(self.space['tmp'], self._search.target)
                     result = self.__save_cv(outputfile, image_cv)
                     self.search_result.put(result)
-                """
-                if self._pattern_match != None:
-                    if self.pic != None:
-                        result, image_cv = self.pic.search_pattern(image_cv, self._pattern_match.target,
-                                                                self._pattern_match.box, TMP_DIR)
-                        self.patternmatch_result.put(result)
+
+                elif self._search.func == 'patternmatch':
+                    if 'picture' in self.module and self.module['picture'] is not None:
+                        result, image_cv = self.module['picture'].search_pattern(image_cv, self._search.target,
+                                                                                 self._search.box, self.space['tmp'])
+                        self.search_result.put(result)
                         save_flag = True
 
-                if self._ocr != None:
-                    if self.ocr != None:
-                        result, image_cv = self.ocr.img_to_string(image_cv, self._ocr.box, TMP_DIR)
-                        self.ocr_result.put(result)
+                elif self._search.func == 'ocr':
+                    if 'ocr' in self.module and self.module['ocr'] is not None:
+                        result, image_cv = self.module['ocr'].img_to_string(image_cv, self._search.box,
+                                                                            self.space['tmp'])
+                        self.search_result.put(result)
                         save_flag = True
-                """
-            if self.counter % 5 == 0 or save_flag:
+                else:
+                    L.warning('Could not find function : %s', self._search.func)
+
+            if not self.counter % 5 or save_flag:
                 self.__save_evidence(self.counter / 5, image_cv)
 
             if self._debug:
@@ -210,7 +246,7 @@ class MinicapProc(object):
                 else:
                     w = int(int(self.adb.get().MINICAP_WIDTH) / 2)
                     h = int(int(self.adb.get().MINICAP_HEIGHT) / 2)
-                    if int(self.adb.get().ROTATE) == 0:
+                    if not int(self.adb.get().ROTATE):
                         resize_image_cv = cv2.resize(image_cv, (h, w))
                     else:
                         resize_image_cv = cv2.resize(image_cv, (w, h))
@@ -219,10 +255,6 @@ class MinicapProc(object):
                 if key == 27:
                     break
             self.counter += 1
-            """
-            ret, jpeg = cv2.imencode('.jpg', image_cv)
-            self.output.put(jpeg.tobytes())
-            if self.get_d() > MAX_SIZE: self.output.get()
-            """
+
         if self._debug:
             cv2.destroyAllWindows()
