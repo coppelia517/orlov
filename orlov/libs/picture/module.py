@@ -278,6 +278,17 @@ class Picture(object):
         return cls.__patternmatch(reference, target_cv, box, tmp)
 
 
+class Singleton(type):
+    """ Singleton meta-class
+    """
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
 # pylint: disable=E1101
 class Ocr(object):
     """ OCR Module

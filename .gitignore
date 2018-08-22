@@ -101,6 +101,8 @@ ENV/
 # mypy
 .mypy_cache/
 
-tests/**/tmp
+tests/**/log
+tests/**/tmp/*.png
+tests/**/tmp/evidence
 tests/**/report
 .lockfile
