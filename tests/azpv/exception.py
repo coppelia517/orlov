@@ -1,4 +1,4 @@
-""" Kancolle Project Exceptions. """
+""" AZPV Project Exceptions. """
 from orlov import STRING_SET
 from orlov.exception import OrlovError
 

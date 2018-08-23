@@ -12,6 +12,8 @@ from PIL import Image
 import numpy as np
 import fasteners
 
+from orlov.libs.picture import Picture, Ocr
+
 PATH = os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if not PATH in sys.path:
     sys.path.insert(0, PATH)
@@ -69,7 +71,7 @@ class MinicapProc(object):
         self.counter = 1
         self.lock = fasteners.InterProcessLock('.lockfile')
 
-    def start(self, _adb, _workspace, _picture, _ocr=None):
+    def start(self, _adb, _workspace):
         """ Minicap Process Start.
 
         Arguments:
@@ -79,14 +81,10 @@ class MinicapProc(object):
                 - tmp : workspace.tmp
                 - evidence : workspace.tmp.evidence
                 - reference : workspace.tmp.reference
-            _picture(Picture): picture module adaptor object.
-            _ocr(Ocr): ocr module adaptor object.
 
         """
         self.module['adb'] = _adb
         self.module['workspace'] = _workspace
-        self.module['picture'] = _picture
-        self.module['ocr'] = _ocr
 
         self.space['tmp'] = self.module['workspace'].mkdir('tmp')
         self.space['log'] = self.module['workspace'].mkdir('log')
@@ -220,18 +218,15 @@ class MinicapProc(object):
                     self.search_result.put(result)
 
                 elif self._search.func == 'patternmatch':
-                    if 'picture' in self.module and self.module['picture'] is not None:
-                        result, image_cv = self.module['picture'].search_pattern(image_cv, self._search.target,
-                                                                                 self._search.box, self.space['tmp'])
-                        self.search_result.put(result)
-                        save_flag = True
+                    result, image_cv = Picture.search_pattern(image_cv, self._search.target, self._search.box,
+                                                              self.space['tmp'])
+                    self.search_result.put(result)
+                    save_flag = True
 
                 elif self._search.func == 'ocr':
-                    if 'ocr' in self.module and self.module['ocr'] is not None:
-                        result, image_cv = self.module['ocr'].img_to_string(image_cv, self._search.box,
-                                                                            self.space['tmp'])
-                        self.search_result.put(result)
-                        save_flag = True
+                    result, image_cv = Ocr.img_to_string(image_cv, self._search.box, self.space['tmp'])
+                    self.search_result.put(result)
+                    save_flag = True
                 else:
                     L.warning('Could not find function : %s', self._search.func)
 

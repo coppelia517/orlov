@@ -238,7 +238,7 @@ class Picture(object):
         img_gray = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
         img_gray = img_gray[box.y:(box.y + box.height), box.x:(box.x + box.width)]
 
-        if tmp != None:
+        if tmp:
             cv2.imwrite(os.path.join(tmp, 'crop.png'), img_gray)
 
         template = target
@@ -292,26 +292,29 @@ class Singleton(type):
 # pylint: disable=E1101
 class Ocr(object):
     """ OCR Module
-
-    Attributes:
-        pic(Picture): Picture Module.
-
     """
 
-    def __init__(self, _pic):
-        self.pic = _pic
+    TOOL = __tool_initialize()
+    LANGUAGE = __language_initialize(TOOL)
+
+    @classmethod
+    def __tool_initialize(cls):
         tools = pyocr.get_available_tools()
-        L.info(tools)
         if not tools:
             raise OcrError('No OCR tool found.')
-        self.tool = tools[0]
-        L.info('Will use tool "%s"', (self.tool.get_name()))
-        langs = self.tool.get_available_languages()
+        return tools[0]
+
+    @classmethod
+    def __language_initialize(cls, tool):
+        L.info('Will use tool "%s"', (tool.get_name()))
+        langs = tool.get_available_languages()
         L.info('Available languages: %s', ', '.join(langs))
         lang = langs[0]
         L.info('Will use lang "%s"', lang)
+        return lang
 
-    def __img_to_string(self, reference, box=None, tmp=None, _lang='eng'):
+    @classmethod
+    def __img_to_string(cls, reference, box=None, tmp=None, _lang='eng'):
         """ OCR Image to String Method.
 
         Arguments:
@@ -340,13 +343,14 @@ class Ocr(object):
 
         img_gray = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
         img_gray = img_gray[box.y:(box.y + box.height), box.x:(box.x + box.width)]
-        if tmp != None:
+        if tmp:
             cv2.imwrite(os.path.join(tmp, 'crop_ocr.png'), img_gray)
-        txt = self.tool.image_to_string(
-            self.pic.to_pil(img_gray), lang=_lang, builder=pyocr.builders.TextBuilder(tesseract_layout=6))
+        txt = cls.TOOL.image_to_string(
+            Picture.to_pil(img_gray), lang=_lang, builder=pyocr.builders.TextBuilder(tesseract_layout=6))
         return txt, reference
 
-    def img_to_string(self, reference, box=None, tmp=None, _lang='eng'):
+    @classmethod
+    def img_to_string(cls, reference, box=None, tmp=None, _lang='eng'):
         """ OCR Image to String Method.
 
         Arguments:
@@ -364,11 +368,12 @@ class Ocr(object):
             reference(str): reference filepath.
 
         """
-        txt, _ = self.__img_to_string(reference, box, tmp, _lang)
+        txt, _ = cls.__img_to_string(reference, box, tmp, _lang)
         L.debug('Get Text -> %s', txt)
         return txt, reference
 
-    def file_to_string(self, filename, box=None, tmp=None, _lang='eng'):
+    @classmethod
+    def file_to_string(cls, filename, box=None, tmp=None, _lang='eng'):
         """ OCR File to String Method.
 
         Arguments:
@@ -388,6 +393,6 @@ class Ocr(object):
         if not os.path.exists(filename):
             raise PictureError('it is not exists reference file. : %s' % filename)
         ref_cv = cv2.imread(filename)
-        txt, _ = self.__img_to_string(ref_cv, box, tmp, _lang)
+        txt, _ = cls.__img_to_string(ref_cv, box, tmp, _lang)
         L.info('%s -> %s', filename, txt)
         return txt
