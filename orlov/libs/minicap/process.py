@@ -91,6 +91,7 @@ class MinicapProc(object):
         self.space['tmp.reference'] = self.module['workspace'].mkdir('tmp\\reference')
 
         self.module['service'].start(self.module['adb'], self.space['log'])
+        time.sleep(1)
         self.module['adb'].forward('tcp:%s localabstract:minicap' % str(self.module['stream'].get_port()))
         self.module['stream'].start()
         threading.Thread(target=self.main_loop).start()
@@ -99,6 +100,7 @@ class MinicapProc(object):
         """ Minicap Process Finish.
         """
         self._loop_flag = False
+        time.sleep(1)
         self.module['stream'].finish()
         if 'service' in self.module and self.module['service'] is not None:
             self.module['service'].stop()

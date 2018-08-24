@@ -52,8 +52,8 @@ def m_service(request) -> MinicapService:
     yield MinicapService(serv)
 
 
-#pylint: disable=W0621
-@pytest.fixture(scope='class')
+@pytest.fixture(scope='session')
+# pylint: disable=W0621
 def minicap(request, m_stream, m_service) -> MinicapProc:
     """ MinicapProc Fixture.
 

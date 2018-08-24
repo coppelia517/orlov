@@ -100,7 +100,7 @@ class AndroidBase(object):
         """
         L.debug(cmd)
         result = run(cmd, timeout=timeout, debug=debug)
-        if result != None:
+        if result:
             try:
                 if not result[0]:
                     result = result[1].replace('\r', '')
