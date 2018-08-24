@@ -133,7 +133,7 @@ class MinicapStream(object):
         """
         self.minicap_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.minicap_socket.connect((self.IP, self.PORT))
-        self.read_image_stream_task = threading.Thread(target=self.read_image_stream).start()
+        threading.Thread(target=self.read_image_stream).start()
 
     def finish(self):
         """ call stop Minicap Stream.
@@ -208,12 +208,3 @@ class MinicapStream(object):
                         frame_body_length -= length - cursor
                         read_frame_bytes += length - cursor
                         cursor = length
-
-
-if __name__ == '__main__':
-    import time
-    stream = MinicapStream.get_builder()
-    stream.start()
-    time.sleep(5)
-    stream.finish()
-    time.sleep(3)

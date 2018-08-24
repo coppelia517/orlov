@@ -294,9 +294,6 @@ class Ocr(object):
     """ OCR Module
     """
 
-    TOOL = __tool_initialize()
-    LANGUAGE = __language_initialize(TOOL)
-
     @classmethod
     def __tool_initialize(cls):
         tools = pyocr.get_available_tools()
@@ -345,7 +342,7 @@ class Ocr(object):
         img_gray = img_gray[box.y:(box.y + box.height), box.x:(box.x + box.width)]
         if tmp:
             cv2.imwrite(os.path.join(tmp, 'crop_ocr.png'), img_gray)
-        txt = cls.TOOL.image_to_string(
+        txt = cls.__tool_initialize().image_to_string(
             Picture.to_pil(img_gray), lang=_lang, builder=pyocr.builders.TextBuilder(tesseract_layout=6))
         return txt, reference
 

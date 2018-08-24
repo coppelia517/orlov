@@ -1,15 +1,12 @@
 """ Resource Module """
 import os
-import sys
 import json
 import logging
 from urllib.parse import urlparse
 
-PATH = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
-if not PATH in sys.path:
-    sys.path.insert(0, PATH)
-
-from azpv.exception import ResourceError
+#pylint: disable=E0401
+from anat.exception import ResourceError
+from anat.utility import TMP_REFERENCE_DIR
 
 L = logging.getLogger(__name__)
 
@@ -33,20 +30,20 @@ class Parser:
 
         """
         if _id:
-            target = "%s/id" % target
+            target = '%s/id' % target
         info = urlparse(target)
         base_folder = os.path.join(TMP_REFERENCE_DIR, info.netloc)
         if not os.path.exists(base_folder):
-            raise ResourceError("Can't find base directory : %s" % info.netloc)
+            raise ResourceError('Could not find base directory : %s' % info.netloc)
         for f in os.listdir(base_folder):
-            if f.find("%s.json" % info.scheme) != -1:
+            if f.find('%s.json' % info.scheme) != -1:
                 with open(os.path.join(base_folder, f), 'r') as jf:
                     data = json.load(jf)
                     result = Parser.query(data, info.path)
                     if result == None:
-                        ResourceError("Can't find target Infomation : %s" % info.path)
-                    return Parser.path(base_folder, info.path, _id), result["name"], result["bounds"]
-        L.warning("Can't Found Resource.")
+                        ResourceError('Could not find target Infomation : %s' % info.path)
+                    return Parser.path(base_folder, info.path, _id), result['name'], result['bounds']
+        L.warning('Could not Found Resource.')
         return None, None, None
 
     @classmethod
