@@ -4,17 +4,15 @@ import time
 import logging
 import pytest
 
-from orlov.libs.adb import AndroidFactory
 from core.utility import HOGE
-from core.script.test_script import TestOrlov
+from core.script.script_base import OrlovBase
 
 logger = logging.getLogger(__name__)
-PROFILE = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'profile'))
 
 
 @pytest.mark.usefixtures('conftests_fixture', 'orlov_fixture', 'testcase_fixture')
 # pylint: disable=E1101, C0302, R0914
-class TestOrlov2(TestOrlov):
+class TestOrlov(OrlovBase):
     """Tests for `orlov` package."""
 
     def test_000_something(self):

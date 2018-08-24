@@ -1,6 +1,5 @@
 """ Test for orlov core packages. """
 import os
-import time
 import logging
 import pytest
 
@@ -10,9 +9,7 @@ logger = logging.getLogger(__name__)
 PROFILE = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'profile'))
 
 
-@pytest.mark.usefixtures('conftests_fixture', 'orlov_fixture', 'testcase_fixture')
-# pylint: disable=E1101, C0302, R0914
-class TestOrlov:
+class OrlovBase:
     """Tests for `orlov` package."""
 
     @classmethod
