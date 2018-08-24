@@ -50,7 +50,7 @@ def pytest_runtest_makereport(item):
     We can store the result of each phase in this hook. This is done so pytest_runtest_teardown hook can read it.
     :param item: Pytest test item
     """
-    logger.debug("Setup of pytest_runtest_makereport")
+    logger.debug('Setup of pytest_runtest_makereport')
     outcome = yield
     logger.debug("Teardown of pytest_runtest_makereport")
     # outcome.excinfo may be None or a (cls, val, tb) tuple

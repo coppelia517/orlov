@@ -52,11 +52,15 @@ def m_service(request) -> MinicapService:
     yield MinicapService(serv)
 
 
+#pylint: disable=W0621
 @pytest.fixture(scope='class')
 def minicap(request, m_stream, m_service) -> MinicapProc:
     """ MinicapProc Fixture.
-    """
 
+    Yields:
+        proc(MinicapProc): MinicapProc Module Create.
+
+    """
     logger.debug('Minicap : Setup of Minicap Process.')
     debug = False
     if request.config.getoption('orlov_debug'):
