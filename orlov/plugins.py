@@ -22,7 +22,6 @@ def pytest_addoption(parser):
     """add commandline options"""
     group = parser.getgroup('orlov')
     group.addoption('--orlov-debug', action='store_true', dest='orlov_debug', default=False, help='debug flag.')
-    group.addoption('--package', action='store', dest='package', default='package', help='package.')
 
     w_group = parser.getgroup('orlov workspace')
     w_group.addoption('--ws', '--workspace', action='store', dest='workspace', default='.', help='test base folder.')

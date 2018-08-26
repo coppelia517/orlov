@@ -96,6 +96,19 @@ class Anat(AnatBase):
 
     def validate(self, location, _id=None, area=None, _num=None, func='cv'):
         """ Validate Path.
+
+        Arguments:
+            location(str): target location.
+            _id(str): target id.
+            area(tuple): target area bounds.
+            _num(int): get name id.
+            func(str): search function. `cv` or `ocr`.
+
+        Returns:
+            path(str): target filepath.
+            name(str): target name.
+            area(tuple): target area bounds.
+
         """
         path, name, bounds = P.search(self.__get_path(location, func), _num)
         if _id:
@@ -114,6 +127,16 @@ class Anat(AnatBase):
 
     def exists(self, location, _id=None, area=None, timeout=TIMEOUT):
         """ Pattern Match Exists.
+
+        Arguments:
+            location(str): target location.
+            _id(str): target id.
+            area(tuple): target area bounds.
+            timeout(int): timeout count.
+
+        Returns:
+            result(bool): return result.
+
         """
         logger.debug('Exists Check: Location %s, ID %s, Area %s, Timeout %s.', location, _id, area, timeout)
         path, name, area = self.validate(location, _id, area, func='cv')
