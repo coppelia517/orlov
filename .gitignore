@@ -104,5 +104,6 @@ ENV/
 tests/**/log
 tests/**/tmp/*.png
 tests/**/tmp/evidence
+tests/**/tmp/video
 tests/**/report
 .lockfile

@@ -24,7 +24,7 @@ class Workspace(object):
         self.default_path = os.path.abspath(path)
         if os.path.exists(path):
             if os.listdir(path):
-                L.warning('It is not vacant folder in the path.')
+                L.debug('It is not vacant folder in the path.')
                 if clear:
                     try:
                         for f in os.listdir(path):
@@ -46,7 +46,7 @@ class Workspace(object):
         """ Get Workspace Module Root.
 
         Returns:
-            default_path(str)
+            default_path(str): default path.
 
         """
         return self.default_path
@@ -74,7 +74,7 @@ class Workspace(object):
 
         if os.path.exists(path):
             if os.listdir(path):
-                L.warning('It is not vacant folder in the path.')
+                L.debug('It is not vacant folder in the path.')
                 if clear:
                     try:
                         for f in os.listdir(path):

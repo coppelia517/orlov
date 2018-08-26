@@ -2,6 +2,7 @@
 import os
 import io
 import sys
+import time
 import logging
 import threading
 from queue import Queue
@@ -146,7 +147,7 @@ class MinicapProc(object):
             filepath(str): filepath
 
         """
-        return cv2.imwrite(filename, img_cv)
+        return filename if cv2.imwrite(filename, img_cv) else None
 
     def __save_evidence(self, number, data):
         """ Save Evidence Data.
@@ -194,6 +195,33 @@ class MinicapProc(object):
 
         """
         return self.__search('capture', filename, None)
+
+    def search_pattern(self, target, box=None, _timeout=5):
+        """ Search Pattern Match File.
+
+        Arguments:
+            target(str): target file path.
+            box(tuple): target search box.
+            _timeout(int): timeout.
+
+        Returns:
+            result(tuple): search pattern point.
+
+        """
+        return self.__search('patternmatch', target, box, _timeout)
+
+    def search_ocr(self, box=None, _timeout=5):
+        """ Search OCR File.
+
+        Arguments:
+            box(tuple): target search box.
+            _timeout(int): timeout.
+
+        Returns:
+            result(tuple): search pattern point.
+
+        """
+        return self.__search('ocr', 'dummy', box, _timeout)
 
     def main_loop(self):
         """ Minicap Process Main Loop.

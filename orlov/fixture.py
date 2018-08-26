@@ -30,5 +30,7 @@ def orlov_fixture(request, workspace, minicap):
     logger.info('Orlov Fixture : setup minicap service and other.')
     request.cls.workspace = workspace
     request.cls.minicap = minicap
+    request.cls.evidence_dir = request.cls.workspace.mkdir('tmp\\evidence')
+    request.cls.video_dir = request.cls.workspace.mkdir('tmp\\video')
     yield
     logger.info('Olorv Fixture : teardown minicap service and other.')

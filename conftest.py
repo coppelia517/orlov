@@ -19,7 +19,7 @@ def conftests_fixture(request, orlov_fixture):
     fixture executed once per test suite. Should contain
     code common to all test suites in the project.
     """
-    logger.info('Conftest fixture - setting up the test suite')
-    logger.info('Debug Flag : %s ', request.config.getoption('orlov_debug'))
+    logger.info('Conftest Fixture : Setting Up the Test Suite')
+    logger.info('Conftest Fixture : Debug Flag : %s ', request.config.getoption('orlov_debug'))
     yield
-    logger.info('Conftest fixture - tearing down the test suite')
+    logger.info('Conftest Fixture : Tearing Down the Test Suite')
