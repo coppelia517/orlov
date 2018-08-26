@@ -22,11 +22,24 @@ class AnatBase:
     def anat_fixture(cls, request):
         """ fixture executed once for the test suite """
         logger.info('ANAT Fixture : setup the testcase.')
-        logger.info('ANAT Fixture : create adb adaptor.')
         logger.info('ANAT Fixture : adb serial: %s', request.config.getoption('android.serial'))
-        cls.adb = AndroidFactory.create(request.config.getoption('android.serial'), PROFILE_DIR)
+        package = cls.__package(request)
+        if package:
+            cls.set('args.package', package)
+            cls.adb = AndroidFactory.create(
+                request.config.getoption('android.serial'), os.path.join(SCRIPT_DIR, package, 'profile'))
+            logger.info('ANAT Fixture : package : %s', package)
+        else:
+            cls.adb = AndroidFactory.create(request.config.getoption('android.serial'), PROFILE_DIR)
+        cls.get_config()
         yield
         logger.info('ANAT Fixture : teardown the testcase.')
+
+    @classmethod
+    def __package(cls, request):
+        package = os.path.split(os.path.dirname(request.fspath))[-1]
+        script = os.path.split(SCRIPT_DIR)[-1]
+        return package if package != script else None
 
     @classmethod
     def set(cls, name, value):
@@ -52,22 +65,18 @@ class AnatBase:
         """
         return cls.config.get(name)
 
-    def get_config(self, conf=None):
+    @classmethod
+    def get_config(cls):
         """ Get Configure File Value.
-
-        Arguments:
-            conf(str): config filename.
-
         """
-        host = os.path.join(SCRIPT_DIR, self.get('args.package')) if self.get('args.package') else SCRIPT_DIR
-        conf = os.path.join(host, 'config.ini') if not conf else os.path.join(host, 'config', conf + '.ini')
-
+        host = os.path.join(SCRIPT_DIR, cls.get('args.package')) if cls.get('args.package') else SCRIPT_DIR
+        conf = os.path.join(host, 'config.ini')
         try:
             config = configparser.RawConfigParser()
             cfp = open(conf, 'r')
             config.read_file(cfp)
             for section in config.sections():
                 for option in config.options(section):
-                    self.set('%s.%s' % (section, option), config.get(section, option))
+                    cls.set('%s.%s' % (section, option), config.get(section, option))
         except FileNotFoundError as e:
             logger.warning('error: could not read config file: %s', str(e))

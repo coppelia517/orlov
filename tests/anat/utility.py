@@ -13,3 +13,30 @@ TMP_EVIDENCE_DIR = os.path.normpath(os.path.join(TMP_DIR, 'evidence'))
 TMP_VIDEO_DIR = os.path.normpath(os.path.join(TMP_DIR, 'video'))
 
 FFMPEG_BIN = os.path.normpath(os.path.join(BIN_DIR, 'ffmpeg', 'bin', 'ffmpeg.exe'))
+
+TIMEOUT = 20
+
+
+class POINT(object):
+    """ PatternMatch Point Object.
+
+    Attributes:
+        x(int): Start Point X position.
+        y(int): Start Point Y position.
+        width(int): Target Image Width.
+        height(int): Target Image Height.
+
+    """
+
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    def __repr__(self):
+        return 'POINT()'
+
+    def __str__(self):
+        return '(X, Y) = (%s, %s), Width = %s, Height = %s' \
+            % (str(self.x), str(self.y), str(self.width), str(self.height))

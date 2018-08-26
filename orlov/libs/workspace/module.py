@@ -59,8 +59,11 @@ class Workspace(object):
             host(str) : base directory. default : '.'
             clear(bool) : if true, create folder with clear all.
 
+        Raises:
+            WorkspaceError: folder not created.
+
         Returns:
-            path(str)
+            path(str): create directory path.
 
         """
         if not isinstance(folder, STRING_SET):
@@ -93,8 +96,12 @@ class Workspace(object):
             folder(str) : create folder name.
             host(str) : base directory. default : '.'
 
+        Raises:
+            WorkspaceError: 1). Could not folder name be strings.
+                            2). Could not remove file.
+
         Returns:
-            path(str)
+            path(str): remove directory path.
 
         """
         if not isinstance(folder, STRING_SET):
@@ -126,8 +133,12 @@ class Workspace(object):
             filename(str) : create filename.
             host(str) : base directory. default : '.'
 
+        Raises:
+            WorkspaceError: 1). Not strings create filename.
+                            2). Already exists.
+
         Returns:
-            filepath(str)
+            filepath(str): touch create filepath.
 
         """
         if not isinstance(filename, STRING_SET):
@@ -152,7 +163,7 @@ class Workspace(object):
             host(str) : base directory. default : '.'
 
         Returns:
-            filepath(str)
+            filepath(str): touch create unique file path.
 
         """
         d = datetime.datetime.today()
@@ -165,8 +176,12 @@ class Workspace(object):
         Arguments:
             filepath(str) : remove filepath.
 
+        Raises:
+            WorkspaceError: 1). Could not folder name be strings.
+                            2). Could not remove file.
+
         Returns:
-            filepath(str)
+            filepath(str): remove file path.
 
         """
         if not isinstance(filepath, STRING_SET):
