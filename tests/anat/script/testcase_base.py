@@ -4,10 +4,16 @@ import logging
 import configparser
 import pytest
 
+# flake8: noqa
+# pylint: disable=no-name-in-module
+# pylint: disable=unused-import
+# pylint: disable=redefined-outer-name
+# pylint: disable=unused-argument
+
 from orlov.libs.adb import AndroidFactory
 
 #pylint: disable=E0401
-from anat.utility import PROFILE_DIR, SCRIPT_DIR
+from anat.utility import PROFILE_DIR, SCRIPT_DIR, TMP_VIDEO_DIR, TMP_EVIDENCE_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +28,9 @@ class AnatBase:
     def anat_fixture(cls, request):
         """ fixture executed once for the test suite """
         logger.info('ANAT Fixture : setup the testcase.')
+        logger.info('ANAT Fixture : cleanup evidence folder.')
+        request.cls.workspace.rmdir('tmp\\video')
+        request.cls.workspace.rmdir('tmp\\evidence')
         logger.info('ANAT Fixture : adb serial: %s', request.config.getoption('android.serial'))
         package = cls.__package(request)
         if package:

@@ -90,6 +90,7 @@ class MinicapProc(object):
         self.space['log'] = self.module['workspace'].mkdir('log')
         self.space['tmp.evidence'] = self.module['workspace'].mkdir('tmp\\evidence')
         self.space['tmp.reference'] = self.module['workspace'].mkdir('tmp\\reference')
+        self.space['tmp.video'] = self.module['workspace'].mkdir('tmp\\video')
 
         self.module['service'].start(self.module['adb'], self.space['log'])
         time.sleep(1)

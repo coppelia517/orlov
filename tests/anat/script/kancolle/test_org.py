@@ -20,4 +20,4 @@ class TestOrg(Anat):
         self.start()
         time.sleep(5)
         self.screenshot()
-        assert self.exists('home')
+        assert self.wait('home', _wait=10)

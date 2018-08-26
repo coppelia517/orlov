@@ -4,12 +4,14 @@ import time
 import glob
 import random
 import logging
+import threading
+from queue import Queue
 
 # pylint: disable=E0401
 from anat.script.testcase_base import AnatBase
 from anat.exception import ResourceError
 from anat.resource import Parser as P
-from anat.utility import POINT, TIMEOUT
+from anat.utility import POINT, TIMEOUT, WAIT_TIMEOUT
 
 logger = logging.getLogger(__name__)
 
@@ -138,12 +140,81 @@ class Anat(AnatBase):
             result(bool): return result.
 
         """
-        logger.debug('Exists Check: Location %s, ID %s, Area %s, Timeout %s.', location, _id, area, timeout)
+        result = self.match(location, _id, area, timeout, multiple=False)
+        return True if result else False
+
+    def match(self, location, _id=None, area=None, timeout=TIMEOUT, multiple=False):
+        """ Pattern Match Method.
+
+        Arguments:
+            location(str): target location.
+            _id(str): target id.
+            area(tuple): target area bounds.
+            timeout(int): timeout count.
+            multiple(bool): multiple flag.
+
+        Returns:
+            result(POINT): return result.
+
+        """
+        logger.debug('Match Check: Location %s, ID %s, Area %s, Timeout %s.', location, _id, area, timeout)
         path, name, area = self.validate(location, _id, area, func='cv')
+        res = []
         for f in glob.glob(os.path.join(path, name)):
             logger.debug('File : %s - %s', location, os.path.basename(f))
             result = self.minicap.search_pattern(os.path.join(os.path.join(path, f)), area, timeout)
-            if result != None:
-                logger.debug('Exists : Location %s/%s, %s.', location, os.path.basename(f), result)
-                return True
-        return False
+            if result:
+                if multiple:
+                    res.append(result)
+                else:
+                    logger.debug('Exists : Location %s/%s, %s.', location, os.path.basename(f), result)
+                    return result
+        return res if multiple else None
+
+    def __wait_loop(self, location, _id=None, area=None, timeout=TIMEOUT):
+        while self._wait_loop_flag:
+            if self.exists(location, _id, area, timeout):
+                self.wait_queue.put(True)
+                break
+
+    #pylint: disable=W0201
+    def wait(self, location, _id=None, area=None, timeout=TIMEOUT, _wait=WAIT_TIMEOUT):
+        """ Pattern Match Method.
+
+        Arguments:
+            location(str): target location.
+            _id(str): target id.
+            area(tuple): target area bounds.
+            timeout(int): timeout count.
+            _wait(int): wait limit time.
+
+        Returns:
+            result(bool): return result.
+
+        """
+        logger.debug('Wait Start : %s / Timeout : %s', location, timeout)
+        try:
+            self._wait_loop_flag = True
+            start = time.time()
+            self.wait_queue = Queue()
+            self.loop = threading.Thread(
+                target=self.__wait_loop, args=(
+                    location,
+                    _id,
+                    area,
+                    timeout,
+                ))
+            self.loop.start()
+            result = self.wait_queue.get(timeout=_wait)
+            if result:
+                return result
+            else:
+                filename = 'wait_failed_{}.png'.format(time.strftime('%Y_%m_%d_%H_%M_%S'))
+                self.screenshot(filename)
+                return False
+        except TimeoutError as e:
+            logger.warning('Wait Timeout : %s', str(e))
+        finally:
+            self._wait_loop_flag = False
+            self.loop.join()
+            logger.debug('Wait Loop End. Elapsed Time : %s', str(time.time() - start))

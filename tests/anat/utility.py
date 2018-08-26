@@ -15,6 +15,9 @@ TMP_VIDEO_DIR = os.path.normpath(os.path.join(TMP_DIR, 'video'))
 FFMPEG_BIN = os.path.normpath(os.path.join(BIN_DIR, 'ffmpeg', 'bin', 'ffmpeg.exe'))
 
 TIMEOUT = 20
+TAP_THRESHOLD = 0.2
+TIMEOUT = 20
+WAIT_TIMEOUT = 60
 
 
 class POINT(object):
