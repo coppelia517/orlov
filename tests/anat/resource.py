@@ -40,7 +40,7 @@ class Parser:
                 with open(os.path.join(base_folder, f), 'r') as jf:
                     data = json.load(jf)
                     result = Parser.query(data, info.path)
-                    if result == None:
+                    if not result:
                         ResourceError('Could not find target Infomation : %s' % info.path)
                     return Parser.path(base_folder, info.path, _id), result['name'], result['bounds']
         L.warning('Could not Found Resource.')
@@ -48,6 +48,8 @@ class Parser:
 
     @classmethod
     def path(cls, base_folder, path, _id=None):
+        """ Search Path.
+        """
         for i in path.split('/'):
             base_folder = os.path.join(base_folder, i)
         if _id != None:
@@ -57,6 +59,8 @@ class Parser:
 
     @classmethod
     def query(cls, d, q):
+        """ Search query.
+        """
         keys = q.split('/')
         nd = d
         for k in keys:

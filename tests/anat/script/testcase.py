@@ -5,7 +5,7 @@ import glob
 import random
 import logging
 import threading
-from queue import Queue
+from queue import Queue, Empty
 
 # pylint: disable=E0401
 from anat.script.testcase_base import AnatBase
@@ -205,16 +205,15 @@ class Anat(AnatBase):
                     timeout,
                 ))
             self.loop.start()
-            result = self.wait_queue.get(timeout=_wait)
-            if result:
-                return result
-            else:
-                filename = 'wait_failed_{}.png'.format(time.strftime('%Y_%m_%d_%H_%M_%S'))
-                self.screenshot(filename)
-                return False
-        except TimeoutError as e:
-            logger.warning('Wait Timeout : %s', str(e))
-        finally:
+            return self.wait_queue.get(timeout=_wait)
+        except Empty:
+            logger.warning('Wait Timeout.')
+            self._wait_loop_flag = False
+            self.loop.join()
+            filename = 'wait_failed_{}.png'.format(time.strftime('%Y_%m_%d_%H_%M_%S'))
+            self.screenshot(filename)
+            return False
+        else:
             self._wait_loop_flag = False
             self.loop.join()
             logger.debug('Wait Loop End. Elapsed Time : %s', str(time.time() - start))
