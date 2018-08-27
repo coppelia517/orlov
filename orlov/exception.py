@@ -66,7 +66,7 @@ class OrlovError(Exception):
             trace(str): trace
 
         """
-        return 'trace' in self.details and self.trace != None
+        return 'trace' in self.details and self.details['trace'] is not None
 
     def format_trace(self) -> str:
         """ Return formated trace attribute.

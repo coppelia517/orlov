@@ -11,7 +11,7 @@ from queue import Queue, Empty
 from anat.script.testcase_base import AnatBase
 from anat.exception import ResourceError
 from anat.resource import Parser as P
-from anat.utility import POINT, TIMEOUT, WAIT_TIMEOUT
+from anat.utility import POINT, TIMEOUT, WAIT_TIMEOUT, TAP_THRESHOLD
 
 logger = logging.getLogger(__name__)
 
@@ -20,13 +20,13 @@ class Anat(AnatBase):
     """ Test Case Base `anat` package.
     """
 
-    def start(self):
+    def start(self) -> None:
         """ Start Minicap Process.
         """
         logger.info(' === Start Minicap Process. === ')
         self.minicap.start(self.adb, self.workspace)
 
-    def screenshot(self, filename=None):
+    def screenshot(self, filename=None) -> str:
         """ Get Screenshot from Minicap Process.
 
         Arguments:
@@ -42,28 +42,7 @@ class Anat(AnatBase):
         logger.info('Get Screenshot : %s', path)
         return path
 
-    def search_pattern(self, reference, box=None, count=30):
-        """ Search PatternMatch from Minicap Process.
-
-        Arguments:
-            reference(str): reference file target.
-            box(tuple): target bounds.
-            count(int): timeout countdown.
-
-        """
-        return self.minicap.search_pattern(reference, box, count)
-
-    def ocr(self, box=None, count=30):
-        """ Search OCR from Minicap Process.
-
-        Arguments:
-            box(tuple): target bounds.
-            count(int): timeout countdown.
-
-        """
-        return self.minicap.search_ocr(box, count)
-
-    def sleep(self, base=3):
+    def sleep(self, base=3) -> None:
         """ Set Sleep Time.
 
         Arguments:
@@ -73,23 +52,65 @@ class Anat(AnatBase):
         sleep_time = (base - 0.5 * random.random())
         time.sleep(sleep_time)
 
-    def __get_path(self, target, func='cv'):
+    def __get_path(self, target, func='cv') -> str:
         """ Get Path.
+
+        Arguments:
+            target(str): target path.
+            func(str): function type. 'cv' or 'ocr'.
+
+        Returns:
+            targetpath(str): strings.
+
         """
         return '%s://%s/%s' % (func, self.get('args.package'),
                                target) if self.get('args.package') else '%s://%s' % (func, target)
 
-    def __area(self, width, height, bounds, func='cv'):
+    def __area(self, width, height, bounds, func='cv') -> POINT:
+        """ get area function.
+
+        Arguments:
+            width(int): target device width.
+            height(int): target device height.
+            bounds(tuple): target bounds.
+            func(str): target function. 'cv' or 'ocr'.
+
+        Returns:
+            target(POINT): target point area.
+
+        """
         return self.__area_cv(width, height, bounds) if func == 'cv' else self.__area_ocr(width, height, bounds)
 
-    def __area_cv(self, width, height, bounds):
+    def __area_cv(self, width, height, bounds) -> POINT:
+        """ get area function.
+
+        Arguments:
+            width(int): target device width.
+            height(int): target device height.
+            bounds(tuple): target bounds.
+
+        Returns:
+            target(POINT): target point area.
+
+        """
         x = int((width * int(bounds['s_x'])) / 100.00)
         y = int((height * int(bounds['s_y'])) / 100.00)
         width = int((width * int(bounds['f_x'])) / 100.00) - x
         height = int((height * int(bounds['f_y'])) / 100.00) - y
         return POINT(x, y, width, height)
 
-    def __area_ocr(self, width, height, bounds):
+    def __area_ocr(self, width, height, bounds) -> POINT:
+        """ get area function.
+
+        Arguments:
+            width(int): target device width.
+            height(int): target device height.
+            bounds(tuple): target bounds.
+
+        Returns:
+            target(POINT): target point area.
+
+        """
         x = int(bounds['s_x'])
         y = int(bounds['s_y'])
         width = int(bounds['f_x']) - x
@@ -109,7 +130,7 @@ class Anat(AnatBase):
         Returns:
             path(str): target filepath.
             name(str): target name.
-            area(tuple): target area bounds.
+            area(POINT): target area bounds.
 
         """
         path, name, bounds = P.search(self.__get_path(location, func), _num)
@@ -127,7 +148,7 @@ class Anat(AnatBase):
         logger.info('Search : %s', self.__get_path(location, func))
         return path, name, area
 
-    def exists(self, location, _id=None, area=None, timeout=TIMEOUT):
+    def exists(self, location, _id=None, area=None, timeout=TIMEOUT) -> bool:
         """ Pattern Match Exists.
 
         Arguments:
@@ -143,7 +164,7 @@ class Anat(AnatBase):
         result = self.match(location, _id, area, timeout, multiple=False)
         return True if result else False
 
-    def match(self, location, _id=None, area=None, timeout=TIMEOUT, multiple=False):
+    def match(self, location, _id=None, area=None, timeout=TIMEOUT, multiple=False) -> POINT:
         """ Pattern Match Method.
 
         Arguments:
@@ -178,7 +199,7 @@ class Anat(AnatBase):
                 break
 
     #pylint: disable=W0201
-    def wait(self, location, _id=None, area=None, timeout=TIMEOUT, _wait=WAIT_TIMEOUT):
+    def wait(self, location, _id=None, area=None, timeout=TIMEOUT, _wait=WAIT_TIMEOUT) -> bool:
         """ Pattern Match Method.
 
         Arguments:
@@ -217,3 +238,143 @@ class Anat(AnatBase):
             self._wait_loop_flag = False
             self.loop.join()
             logger.debug('Wait Loop End. Elapsed Time : %s', str(time.time() - start))
+
+    def text(self, location, text=None, area=None, timeout=TIMEOUT) -> bool:
+        """ OCR Method.
+
+        Arguments:
+            location(str): target location.
+            text(str): target text.
+            area(tuple): target area bounds.
+            timeout(int): timeout count.
+
+        Returns:
+            result(bool): text search result.
+
+        """
+        logger.debug('OCR Test Check: Location %s, Text %s, Area %s, Timeout %s.', location, text, area, timeout)
+        _, name, area = self.validate(location, None, area, func='ocr')
+        if text:
+            name = text
+        result = self.minicap.search_ocr(area, _timeout=timeout)
+        logger.info('target : %s <-> %s : reference', result, name)
+        return result == name
+
+    def tap(self, location, _id=None, area=None, threshold=TAP_THRESHOLD, timeout=TIMEOUT, _wait=WAIT_TIMEOUT) -> bool:
+        """ Tap Method.
+
+        Arguments:
+            location(str): target location.
+            _id(str): target id.
+            area(tuple): target area bounds.
+            threshold(float): target tap threshold.
+            timeout(int): timeout count.
+            _wait(int): wait limit time.
+
+        Returns:
+            result(bool): tap result.
+
+        """
+        logger.debug('Tap : Location %s, ID %s, Area %s, Wait Timeout %s.', location, _id, area, _wait)
+        if _wait:
+            if not self.wait(location, _id, area, timeout, _wait):
+                logger.warning('Could not Find Target : %s', location)
+                return False
+        result = self.match(location, _id, area, timeout=timeout)
+        if result:
+            self._tap(result, threshold=threshold)
+            return True
+        else:
+            return False
+
+    def _tap(self, result, randomize=True, threshold=0.3) -> None:
+        """ Tap Internal Method.
+
+        Arguments:
+            result(POINT): tap target point.
+            randomize(bool): add randomized.
+            threshold(float): tap threshold.
+
+        """
+        if randomize:
+            x = self.normalize_w(result.x) + self.randomize(result.width, threshold)
+            y = self.normalize_h(result.y) + self.randomize(result.height, threshold)
+        else:
+            x = self.normalize_w(result.x)
+            y = self.normalize_h(result.y)
+        self.adb.tap(x, y)
+
+    def normalize(self, base: int, real: int, virtual: int) -> int:
+        """ Normalize Method.
+
+        Arguments:
+            base(int): base size.
+            real(int): real base size.
+            virtual(int): virtual base size.
+
+        Returns:
+            result(int): normalize result.
+
+        """
+        return int(base * real / virtual)
+
+    def normalize_w(self, base: int) -> int:
+        """ Normalize Width.
+
+        Arguments:
+            base(int): base size.
+
+        Returns:
+            result(int): normalize result.
+
+        """
+        return self.normalize(base, int(self.adb.get().WIDTH), int(self.adb.get().MINICAP_WIDTH))
+
+    def conversion_w(self, base: int) -> int:
+        """ Conversion Width.
+
+        Arguments:
+            base(int): base size.
+
+        Returns:
+            result(int): normalize result.
+
+        """
+        return self.normalize(base, int(self.adb.get().MINICAP_WIDTH), int(self.adb.get().WIDTH))
+
+    def normalize_h(self, base: int) -> int:
+        """ Normalize Height.
+
+        Arguments:
+            base(int): base size.
+
+        Returns:
+            result(int): normalize result.
+
+        """
+        return self.normalize(base, int(self.adb.get().HEIGHT), int(self.adb.get().MINICAP_HEIGHT))
+
+    def conversion_h(self, base: int) -> int:
+        """ Conversion Height.
+
+        Arguments:
+            base(int): base size.
+
+        Returns:
+            result(int): normalize result.
+
+        """
+        return self.normalize(base, int(self.adb.get().MINICAP_HEIGHT), int(self.adb.get().HEIGHT))
+
+    def randomize(self, base: int, threshold: float) -> int:
+        """ Randomize.
+
+        Arguments:
+            base(int): base size.
+            threshold(float): threshold.
+
+        Returns:
+            result(int): normalize result.
+
+        """
+        return random.randint(int(int(base) * threshold), int(int(base) * (1.0 - threshold)))
