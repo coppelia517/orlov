@@ -276,19 +276,42 @@ class Anat(AnatBase):
 
         """
         logger.debug('Tap : Location %s, ID %s, Area %s, Wait Timeout %s.', location, _id, area, _wait)
+        for _ in range(timeout):
+            if self.tap(location, _id, area, wait=wait):
+                self.sleep()
+                if not self.exists(location, _id, area, timeout=10): return True
+        return False
+
+
+    def touch(self, location, _id=None, area=None, threshold=TAP_THRESHOLD, timeout=TIMEOUT, _wait=WAIT_TIMEOUT) -> bool:
+        """ Touch Method.
+
+        Arguments:
+            location(str): target location.
+            _id(str): target id.
+            area(tuple): target area bounds.
+            threshold(float): target tap threshold.
+            timeout(int): timeout count.
+            _wait(int): wait limit time.
+
+        Returns:
+            result(bool): touch result.
+
+        """
+        logger.debug('Touch : Location %s, ID %s, Area %s, Wait Timeout %s.', location, _id, area, _wait)
         if _wait:
             if not self.wait(location, _id, area, timeout, _wait):
                 logger.warning('Could not Find Target : %s', location)
                 return False
         result = self.match(location, _id, area, timeout=timeout)
         if result:
-            self._tap(result, threshold=threshold)
+            self._touch(result, threshold=threshold)
             return True
         else:
             return False
 
-    def _tap(self, result, randomize=True, threshold=0.3) -> None:
-        """ Tap Internal Method.
+    def _touch(self, result, randomize=True, threshold=0.3) -> None:
+        """ Touch Internal Method.
 
         Arguments:
             result(POINT): tap target point.
