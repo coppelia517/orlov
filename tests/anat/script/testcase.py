@@ -93,10 +93,11 @@ class Anat(AnatBase):
             target(POINT): target point area.
 
         """
-        x = int((width * int(bounds['s_x'])) / 100.00)
-        y = int((height * int(bounds['s_y'])) / 100.00)
-        width = int((width * int(bounds['f_x'])) / 100.00) - x
-        height = int((height * int(bounds['f_y'])) / 100.00) - y
+        bounds = bounds.split(',')
+        x = int((width * int(bounds[0])) / 100.00)
+        y = int((height * int(bounds[1])) / 100.00)
+        width = int((width * int(bounds[2])) / 100.00) - x
+        height = int((height * int(bounds[3])) / 100.00) - y
         return POINT(x, y, width, height)
 
     def __area_ocr(self, width, height, bounds) -> POINT:
@@ -111,10 +112,11 @@ class Anat(AnatBase):
             target(POINT): target point area.
 
         """
-        x = int(bounds['s_x'])
-        y = int(bounds['s_y'])
-        width = int(bounds['f_x']) - x
-        height = int(bounds['f_y']) - y
+        bounds = bounds.split(',')
+        x = int(bounds[0])
+        y = int(bounds[1])
+        width = int(bounds[2]) - x
+        height = int(bounds[3]) - y
         return POINT(x, y, width, height)
 
     def validate(self, location, _id=None, area=None, _num=None, func='cv'):
@@ -145,7 +147,7 @@ class Anat(AnatBase):
                 area = self.__area(w, h, bounds, func)
             else:
                 area = self.__area(h, w, bounds, func)
-        logger.info('Search : %s', self.__get_path(location, func))
+        logger.debug('Search : %s', self.__get_path(location, func))
         return path, name, area
 
     def exists(self, location, _id=None, area=None, timeout=TIMEOUT) -> bool:
@@ -213,7 +215,7 @@ class Anat(AnatBase):
             result(bool): return result.
 
         """
-        logger.debug('Wait Start : %s / Timeout : %s', location, timeout)
+        logger.info('Wait Start : %s - Timeout : %s', self.__get_path(location, 'cv'), _wait)
         try:
             self._wait_loop_flag = True
             start = time.time()
@@ -277,13 +279,14 @@ class Anat(AnatBase):
         """
         logger.debug('Tap : Location %s, ID %s, Area %s, Wait Timeout %s.', location, _id, area, _wait)
         for _ in range(timeout):
-            if self.tap(location, _id, area, wait=wait):
+            if self.touch(location, _id, area, threshold, _wait=_wait):
                 self.sleep()
-                if not self.exists(location, _id, area, timeout=10): return True
+                if not self.exists(location, _id, area, timeout=10):
+                    return True
         return False
 
-
-    def touch(self, location, _id=None, area=None, threshold=TAP_THRESHOLD, timeout=TIMEOUT, _wait=WAIT_TIMEOUT) -> bool:
+    def touch(self, location, _id=None, area=None, threshold=TAP_THRESHOLD, timeout=TIMEOUT,
+              _wait=WAIT_TIMEOUT) -> bool:
         """ Touch Method.
 
         Arguments:

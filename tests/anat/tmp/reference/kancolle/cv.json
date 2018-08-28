@@ -1,11 +1,28 @@
 {
     "home": {
         "name": "*.png",
-        "bounds": {
-            "s_x": 30,
-            "s_y": 60,
-            "f_x": 70,
-            "f_y": 100
+        "bounds": "30,60,70,100"
+    },
+    "login": {
+        "name": "*.png",
+        "bounds": "60,60,100,100",
+        "music": {
+            "name": "*.png",
+            "bounds": "30,40,70,100"
+        }
+    },
+    "expedition": {
+        "info": {
+            "name": "*.png",
+            "bounds": "50,0,100,30",
+            "success": {
+                "name": "*.png",
+                "bounds": "40,20,100,80"
+            },
+            "failed": {
+                "name": "*.png",
+                "bounds": "40,20,100,80"
+            }
         }
     }
 }
