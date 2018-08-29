@@ -1,5 +1,4 @@
-""" Script base for orlov anat kancolle packages. """
-import time
+""" Script for orlov anat kancolle packages. """
 import logging
 
 # flake8: noqa
@@ -19,14 +18,22 @@ class Kancolle(KancolleBase):
     """
 
     def home(self):
-        """ go to home window.
+        """ Go to home window method.
+
+        Returns:
+            result(bool): home check.
+
         """
         self.tap('menu/home')
         self.sleep(base=5)
-        return self.self.wait('home')
+        return self.wait('home')
 
     def login(self):
         """ Login method.
+
+        Returns:
+            result(bool): home check.
+
         """
         self.adb.stop(self.get('kancolle.app'))
         self.adb.invoke(self.get('kancolle.app'))
@@ -35,20 +42,25 @@ class Kancolle(KancolleBase):
         return self.wait('home')
 
     def expedition_result(self):
+        """ Expedition Result Check method.
+
+        Returns:
+            result(bool): expedition result check.
+
+        """
         if self.exists('expedition/info'):
             self.tap('expedition/info')
-            time.sleep(9)
-            assert self.wait("basic/next")
-            if self.exists("basic/expedition/success"):
-                self.message(self.get("bot.expedition_success"))
-            elif self.exists("basic/expedition/failed"):
-                self.message(self.get("bot.expedition_failed"))
-            self.tap("basic/next")
+            self.sleep(9)
+            assert self.wait('basic/next')
+            if self.exists('expedition/info/success'):
+                self.message(self.get('bot.expedition_success'))
+            elif self.exists('expedition/info/failed'):
+                self.message(self.get('bot.expedition_failed'))
+            self.touch('basic/next')
             self.sleep()
             self.upload()
-            self.tap("basic/next")
-            self.sleep(3)
-            self.invoke_quest_job("expedition", 60)
-            return self.exists("basic/expedition")
+            self.tap('basic/next')
+            self.invoke_quest_job('expedition', 60)
+            return self.exists('expedition/info')
         else:
             return False

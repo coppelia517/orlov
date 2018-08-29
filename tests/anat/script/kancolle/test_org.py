@@ -4,14 +4,14 @@ import logging
 import pytest
 
 # pylint: disable=E0401
-from anat.script.kancolle.testcase_base import KancolleBase
+from anat.script.kancolle.testcase import Kancolle
 
 logger = logging.getLogger(__name__)
 
 
 @pytest.mark.usefixtures('conftests_fixture', 'orlov_fixture', 'anat_fixture')
 # pylint: disable=E1101, C0302, R0914
-class TestOrg(KancolleBase):
+class TestOrg(Kancolle):
     """ Test Case Base `anat` package.
     """
 
