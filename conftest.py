@@ -21,5 +21,6 @@ def conftests_fixture(request, orlov_fixture):
     """
     logger.info('Conftest Fixture : Setting Up the Test Suite')
     logger.info('Conftest Fixture : Debug Flag : %s ', request.config.getoption('orlov_debug'))
+    request.cls.orlov_debug = request.config.getoption('orlov_debug')
     yield
     logger.info('Conftest Fixture : Tearing Down the Test Suite')

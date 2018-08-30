@@ -8,7 +8,7 @@ import logging
 # pylint: disable=unused-argument
 
 # pylint: disable=E0401
-from anat.script.testcase.kancolle import KancolleBase
+from anat.script.kancolle.testcase_base import KancolleBase
 
 logger = logging.getLogger(__name__)
 

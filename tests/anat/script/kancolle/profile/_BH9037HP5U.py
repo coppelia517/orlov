@@ -13,8 +13,8 @@ class _BH9037HP5U(android_base.Android):
     HEIGHT = '1280'
     MINICAP_WIDTH = '720'
     MINICAP_HEIGHT = '1280'
-    LOCATE = 'V'
-    ROTATE = '0'
+    LOCATE = 'H'
+    ROTATE = '90'
 
 
 if __name__ == '__main__':

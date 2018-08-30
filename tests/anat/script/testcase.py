@@ -42,14 +42,18 @@ class Anat(AnatBase):
         logger.info('Get Screenshot : %s', path)
         return path
 
-    def sleep(self, base=3) -> None:
+    def sleep(self, base=3, strict=False) -> None:
         """ Set Sleep Time.
 
         Arguments:
             base(int): base sleep time.
+            strict(bool): set randomize.
 
         """
-        sleep_time = (base - 0.5 * random.random())
+        if strict:
+            sleep_time = base
+        else:
+            sleep_time = (base - 0.5 * random.random())
         time.sleep(sleep_time)
 
     def __get_path(self, target, func='cv') -> str:
@@ -199,6 +203,7 @@ class Anat(AnatBase):
             if self.exists(location, _id, area, timeout):
                 self.wait_queue.put(True)
                 break
+            self.sleep(3, strict=True)
 
     #pylint: disable=W0201
     def wait(self, location, _id=None, area=None, timeout=TIMEOUT, _wait=WAIT_TIMEOUT) -> bool:
@@ -278,12 +283,15 @@ class Anat(AnatBase):
 
         """
         logger.debug('Tap : Location %s, ID %s, Area %s, Wait Timeout %s.', location, _id, area, _wait)
-        for _ in range(timeout):
-            if self.touch(location, _id, area, threshold, _wait=_wait):
-                self.sleep()
+        if self.touch(location, _id, area, threshold, _wait=_wait):
+            for _ in range(timeout):
+                self.sleep(2, strict=True)
                 if not self.exists(location, _id, area, timeout=10):
                     return True
-        return False
+                self.touch(location, _id, area, threshold, _wait=_wait)
+            return False
+        else:
+            return False
 
     def touch(self, location, _id=None, area=None, threshold=TAP_THRESHOLD, timeout=TIMEOUT,
               _wait=WAIT_TIMEOUT) -> bool:
