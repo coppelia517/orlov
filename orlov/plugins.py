@@ -92,6 +92,6 @@ def create_video(src, dst, filename='output.mp4'):
     output = os.path.join(dst, filename)
     if os.path.exists(output):
         os.remove(output)
-    cmd = r'%s -r 4 -i %s -an -vcodec libx264 -pix_fmt yuv420p %s' \
+    cmd = r'%s -r 3 -i %s -an -vcodec libx264 -pix_fmt yuv420p %s' \
          % (FFMPEG_PATH, os.path.join(src, 'image_%08d.png'), output)
     return run(cmd)

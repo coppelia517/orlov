@@ -17,4 +17,4 @@ class TestOrg(KancolleNormal):
     def test_000_org(self):
         """Test something."""
         self.start()
-        assert self.initialize()
+        assert self.initialize(0, 'levelin')
