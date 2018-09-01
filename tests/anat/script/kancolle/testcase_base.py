@@ -1,4 +1,6 @@
 """ Script base for orlov anat kancolle packages. """
+import os
+import glob
 import logging
 
 # flake8: noqa
@@ -8,6 +10,7 @@ import logging
 # pylint: disable=unused-argument
 
 # pylint: disable=E0401
+from anat.utility import TIMEOUT
 from anat.script.testcase import Anat
 
 logger = logging.getLogger(__name__)
@@ -49,3 +52,24 @@ class KancolleBase(Anat):
             pass
         else:
             pass  # Not Implements.
+
+    def match_quest(self, location, _num, area=None, timeout=TIMEOUT):
+        """ Search Quest.
+
+        Arguments:
+            location(str): target location.
+            _num(int): get name id.
+            area(tuple): target area bounds.
+            timeout(int): timeout count.
+
+        Returns:
+            result(POINT): return result.
+
+        """
+        logger.info(' Match Request : %s ', location)
+        path, name, area = self.validate(location, None, area, _num)
+        for f in glob.glob(os.path.join(path, name)):
+            result = self.minicap.search_pattern(os.path.join(os.path.join(path, f)), area, timeout)
+            if result != None:
+                return result
+        return None

@@ -15,7 +15,29 @@ class TestExpedition(KancolleNormal):
     """
 
     def test_000_expedition(self):
-        """ Test Recording. """
+        """ Test Expedition. """
+        logger.info(' *** Start TestCase : %s *** ', __file__)
         self.start()
-        assert self.initialize(0, 'levelin')
-        self.sleep(120, strict=False)
+
+        logger.info(' *** Test SetUp. *** ')
+        assert self.initialize()
+
+        logger.info(' *** Supply Fleet. *** ')
+        while self.expedition_result():
+            self.sleep()
+        result, fleets = self.supply_all()
+        assert result
+
+        logger.info(' *** Quest Check *** ')
+        while self.expedition_result():
+            self.sleep()
+        assert self.quest_receipts(['DP01', 'DP02', 'WP01', 'WP02', 'WP03'])
+
+        logger.info(' *** Expedition Start. *** ')
+        while self.expedition_result():
+            self.sleep()
+        assert self.expedition_all(fleets)
+
+        logger.info(' *** Test TearDown. *** ')
+        while self.expedition_result():
+            self.sleep()
