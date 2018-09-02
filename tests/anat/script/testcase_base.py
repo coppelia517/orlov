@@ -11,6 +11,8 @@ import pytest
 # pylint: disable=unused-argument
 
 from orlov.libs.adb import AndroidFactory
+from orlov.libs.slack import SlackFactory
+from orlov.libs.jenkins import JenkinsFactory
 
 #pylint: disable=E0401
 from anat.utility import PROFILE_DIR, SCRIPT_DIR, TMP_VIDEO_DIR, TMP_EVIDENCE_DIR
@@ -25,6 +27,7 @@ class AnatBase:
 
     @classmethod
     @pytest.fixture(scope='function')
+    # pylint: disable=E1101
     def anat_fixture(cls, request):
         """ fixture executed once for the test suite """
         logger.info('ANAT Fixture : setup the testcase.')
@@ -41,6 +44,11 @@ class AnatBase:
         else:
             cls.adb = AndroidFactory.create(request.config.getoption('android.serial'), PROFILE_DIR)
         cls.get_config()
+        if not cls.orlov_debug:
+            cls.slack = SlackFactory.create(request.config.getoption('slack.serial'))
+            cls.jenkins = JenkinsFactory.create(
+                cls.get('jenkins.url'), request.config.getoption('jenkins.username'),
+                request.config.getoption('jenkins.password'))
         yield
         logger.info('ANAT Fixture : teardown the testcase.')
 

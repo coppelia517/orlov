@@ -42,6 +42,13 @@ def pytest_addoption(parser):
     m_group.addoption(
         '--port', '--minicap-port', action='store', dest='minicap.port', default='1313', help='minicap port.')
 
+    s_group = parser.getgroup('orlov slack')
+    s_group.addoption('--slack', action='store', dest='slack.serial', default='.', help='slack serial number.')
+
+    j_group = parser.getgroup('orlov jenkins')
+    j_group.addoption('--username', action='store', dest='jenkins.username', default='.', help='jenkins username.')
+    j_group.addoption('--password', action='store', dest='jenkins.password', default='.', help='jenkins password.')
+
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item):

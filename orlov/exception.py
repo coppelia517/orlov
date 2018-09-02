@@ -162,3 +162,17 @@ class OcrError(OrlovError):
         if isinstance(details, STRING_SET):
             details = {'message': details}
         OrlovError.__init__(self, details)
+
+
+class SlackError(OrlovError):
+    """ Slack Error.
+
+    Attributes:
+        details(str) : Exception Messages.
+
+    """
+
+    def __init__(self, details):
+        if isinstance(details, STRING_SET):
+            details = {'message': details}
+        OrlovError.__init__(self, details)
