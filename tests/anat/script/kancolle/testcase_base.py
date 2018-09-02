@@ -145,18 +145,17 @@ class KancolleBase(Anat):
         except FileNotFoundError as e:
             logger.warning(e)
 
-    def invoke_job(self, job, token, timeout=300):
+    def invoke_job(self, job, timeout=300):
         """ Invoke Jenkins Job.
 
         Arguments:
             job(str): jenkins job name.
-            token(str): jenkins token.
             timeout(int): timeout.
         """
         if self.debug():
             pass
         else:
-            logger.info('Call %s : %s', job, self.jenkins.invoke(job, token, timeout))
+            logger.info('Call %s : %s', job, self.jenkins.invoke(job, timeout))
 
     def match_quest(self, location, _num, area=None, timeout=TIMEOUT):
         """ Search Quest.

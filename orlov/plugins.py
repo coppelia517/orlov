@@ -48,6 +48,7 @@ def pytest_addoption(parser):
     j_group = parser.getgroup('orlov jenkins')
     j_group.addoption('--username', action='store', dest='jenkins.username', default='.', help='jenkins username.')
     j_group.addoption('--password', action='store', dest='jenkins.password', default='.', help='jenkins password.')
+    j_group.addoption('--token', action='store', dest='jenkins.token', default='.', help='jenkins access token.')
 
 
 @pytest.hookimpl(hookwrapper=True)

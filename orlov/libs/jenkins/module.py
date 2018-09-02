@@ -12,25 +12,26 @@ class Jenkins:
         url(str): jenkins url.
         username(str): username.
         password(str): password.
+        token(str): jenkins access token.
     """
 
-    def __init__(self, url, username, password):
+    def __init__(self, url, username, password, token):
         self.url = url
         self.username = username
         self.password = password
+        self.token = token
 
-    def invoke(self, job, token, timeout=300):
+    def invoke(self, job, timeout=300):
         """ Invoke Jenkins Job.
 
         Arguments:
             job(str): jenkins job name.
-            token(str): jenkins access token.
             timeout(int): target timeout.
 
         Returns:
             status(int): request status code.
         """
-        params = {'token': token, 'delay': '%dsec' % timeout}
+        params = {'token': self.token, 'delay': '%dsec' % timeout}
         url = '%s/job/%s/build' % (self.url, job)
         s = requests.Session()
         s.auth = (self.username, self.password)

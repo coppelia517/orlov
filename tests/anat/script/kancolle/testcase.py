@@ -79,7 +79,7 @@ class Kancolle(KancolleBase):
             self.sleep()
             self.upload()
             self.tap('basic/next')
-            self.invoke_quest_job('expedition', 60)
+            self.invoke_job('expedition', 60)
             return self.exists('expedition/info')
         else:
             return False
