@@ -1,0 +1,14 @@
+{
+    "home": {
+        "name": "*.png",
+        "bounds": "70,70,100,100"
+    },
+    "quest": {
+        "name": "*.png",
+        "bounds": "0,0,50,30",
+        "clear": {
+            "name": "*.png",
+            "bounds": "30,50,70,100"
+        }
+    }
+}

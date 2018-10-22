@@ -266,6 +266,24 @@ class Anat(AnatBase):
         result = self.minicap.search_ocr(area, _timeout=timeout)
         logger.info('target : %s <-> %s : reference', result, name)
         return result == name
+    
+    def number(self, location, area=None, timeout=TIMEOUT) -> str:
+        """ OCR Method.
+
+        Arguments:
+            location(str): target location.
+            area(tuple): target area bounds.
+            timeout(int): timeout count.
+
+        Returns:
+            result(str): text search result.
+
+        """
+        logger.debug('OCR Test Check: Location %s, Area %s, Timeout %s.', location, area, timeout)
+        _, _, area = self.validate(location, None, area, func='ocr')
+        result = self.minicap.search_ocr(area, _timeout=timeout)
+        logger.info('target : %s : reference', result)
+        return result
 
     def tap(self, location, _id=None, area=None, threshold=TAP_THRESHOLD, timeout=TIMEOUT, _wait=WAIT_TIMEOUT) -> bool:
         """ Tap Method.

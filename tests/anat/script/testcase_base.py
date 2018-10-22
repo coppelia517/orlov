@@ -12,7 +12,7 @@ import pytest
 
 from orlov.libs.adb import AndroidFactory
 from orlov.libs.slack import SlackFactory
-from orlov.libs.jenkins import JenkinsFactory
+#from orlov.libs.jenkins import JenkinsFactory
 
 #pylint: disable=E0401
 from anat.utility import PROFILE_DIR, SCRIPT_DIR, TMP_VIDEO_DIR, TMP_EVIDENCE_DIR
@@ -46,9 +46,9 @@ class AnatBase:
         cls.get_config()
         if not cls.orlov_debug:
             cls.slack = SlackFactory.create(request.config.getoption('slack.serial'))
-            cls.jenkins = JenkinsFactory.create(
-                cls.get('jenkins.url'), request.config.getoption('jenkins.username'),
-                request.config.getoption('jenkins.password'))
+            #cls.jenkins = JenkinsFactory.create(
+            #    cls.get('jenkins.url'), request.config.getoption('jenkins.username'),
+            #    request.config.getoption('jenkins.password'))
         yield
         logger.info('ANAT Fixture : teardown the testcase.')
 
