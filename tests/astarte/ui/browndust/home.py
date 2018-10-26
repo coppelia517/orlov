@@ -26,15 +26,15 @@ class Home(CommonView):
         """ Open Arena Page Object.
         """
         assert self.open('home/battle', max_wait=5)
-        assert self.exists('battle')
+        assert self.wait('battle')
         assert self.open('battle/arena', max_wait=5)
-        return getattr(browndust, 'Arena')(self.module)
+        return getattr(browndust, 'Arena')(self.device)
 
     @property
     def norvice(self):
         """ Open Norvice Arena Page Object.
         """
         assert self.open('home/battle', max_wait=5)
-        assert self.exists('battle')
+        assert self.wait('battle')
         assert self.open('battle/norvice', max_wait=5)
-        return getattr(browndust, 'Norvice')(self.module)
+        return getattr(browndust, 'Norvice')(self.device)

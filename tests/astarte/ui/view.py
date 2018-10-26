@@ -22,7 +22,7 @@ class CommonView(Common):
         Returns:
             result(bool): return true if element displayed, not otherwise.
         """
-        return super(CommonView, self).exists(self.PATH['displayed'], timeout=max_wait)
+        return super(CommonView, self).wait(self.PATH['displayed'], timeout=max_wait)
 
     def open(self, target, max_wait=10):
         """ Open Children View.
