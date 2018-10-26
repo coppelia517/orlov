@@ -1,5 +1,7 @@
 """ Astarte Utility """
 import os
+
+# pylint: disable=E0401
 from astarte import PATH
 
 WORK_DIR = PATH

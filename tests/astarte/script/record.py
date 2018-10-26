@@ -10,20 +10,16 @@ logger = logging.getLogger(__name__)
 
 @pytest.mark.usefixtures('conftests_fixture', 'orlov_fixture', 'astarte_fixture')
 # pylint: disable=E1101, C0302, R0914
-class TestArena(BrownDust):
+class TestRecord(BrownDust):
     """ Test Case Base `browndust` package.
     """
 
-    def test_001_arena(self):
-        """ Test Arena Auto Play. """
+    def test_000_record(self):
+        """ Test Record Auto Play. """
         logger.info(' *** Start TestCase : %s *** ', __file__)
         self.start()
 
         logger.info(' *** Test SetUp. *** ')
         assert self.initialize()
 
-        logger.info(' *** Start Arena Battle. *** ')
-        assert self.arena()
-
-        logger.info(' *** Wait Arena Battle Result. *** ')
-        assert self.arena_result()
+        self.sleep(600, strict=True)

@@ -1,7 +1,5 @@
 """ Script base for orlov astarte packages. """
-import os
 import logging
-import configparser
 import pytest
 
 # flake8: noqa
@@ -12,6 +10,8 @@ import pytest
 
 from orlov.libs.adb import AndroidFactory
 
+# pylint: disable=E0401
+from astarte.application import BrownDust
 from astarte.utility import PROFILE_DIR, SCRIPT_DIR
 
 logger = logging.getLogger(__name__)
@@ -36,47 +36,10 @@ class AstarteBase:
         logger.info('Astarte Fixture adb serial : %s', request.config.getoption('android.serial'))
         cls.adb = AndroidFactory.create(request.config.getoption('android.serial'), PROFILE_DIR)
 
-        logger.info('Astarte Fixture : get config parameter.')
-        cls.get_config()
+        logger.info('Astarte Fixture : create device instance.')
+        cls.app = BrownDust(cls.adb, request.cls.minicap)
+        cls.app.start(request.cls.workspace)
 
         yield
 
         logger.info('Astarte Fixture : teardown the testcase.')
-
-    @classmethod
-    def set(cls, name, value):
-        """ Set Config Value.
-
-        Arguments:
-            name(str): set config name.
-            value(str): set config value.
-        """
-        cls.config[name] = value
-
-    @classmethod
-    def get(cls, name):
-        """ Get Config Value.
-
-        Arguments:
-            name(str): get config name.
-
-        Returns:
-            value(str): return config value.
-        """
-        return cls.config.get(name)
-
-    @classmethod
-    def get_config(cls):
-        """ Get Configure File Value.
-        """
-        host = os.path.join(SCRIPT_DIR, cls.get('args.package')) if cls.get('args.package') else SCRIPT_DIR
-        conf = os.path.join(host, 'config.ini')
-        try:
-            config = configparser.RawConfigParser()
-            cfp = open(conf, 'r')
-            config.read_file(cfp)
-            for section in config.sections():
-                for option in config.options(section):
-                    cls.set('%s.%s' % (section, option), config.get(section, option))
-        except FileNotFoundError as e:
-            logger.warning('error: could not read config file: %s', str(e))

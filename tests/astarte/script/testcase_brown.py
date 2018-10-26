@@ -41,6 +41,14 @@ class BrownDust(Astarte):
         self.sleep(60, strict=True)
         assert self.wait('quest')
         self.tap('quest/clear')
+        return self.home()
+
+    def home(self):
+        """ Home Position Check.
+
+        Returns:
+            result(bool): home check.
+        """
         return self.wait('home')
 
     def initialize(self) -> bool:
@@ -52,3 +60,51 @@ class BrownDust(Astarte):
         if not self.adb.rotate() or (not self.exists('home')):
             assert self.login()
         return self.home()
+
+    def arena(self):
+        """ BrownDust Arena Battle Start.
+
+        Returns:
+            result(bool): return result.
+        """
+        if not self.exists('home'):
+            return False
+        self.tap('battle')
+        self.sleep(5)
+        self.tap('battle/arena')
+        self.sleep(5)
+        self.tap('battle/arena/around')
+        self.sleep(2, strict=True)
+        self.tap('battle/arena/start')
+        self.sleep(2)
+        return self.wait('battle/arena/lock')
+
+    def norvice(self):
+        """ BrownDust Norvice Arena Battle Start.
+
+        Returns:
+            result(bool): return result.
+        """
+        if not self.exists('home'):
+            return False
+        self.tap('battle')
+        self.sleep(5)
+        self.tap('battle/norvice')
+        self.sleep(5)
+        self.tap('battle/arena/around')
+        self.sleep(2, strict=True)
+        self.tap('battle/arena/start')
+        self.sleep(2)
+        return self.wait('battle/arena/lock')
+
+    def arena_result(self):
+        """ BrownDust Arena Battle Result.
+        """
+        assert self.wait('battle/arena/lock')
+        while not self.wait('battle/arena/result', _wait=300):
+            self.sleep(60, strict=True)
+        assert self.wait('battle/arena/result')
+        self.tap('battle/arena/accept')
+        self.sleep(4)
+        self.tap('battle/arena/return')
+        return self.wait('home')

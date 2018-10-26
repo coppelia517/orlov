@@ -10,5 +10,41 @@
             "name": "*.png",
             "bounds": "30,50,70,100"
         }
+    },
+    "battle": {
+        "name": "*.png",
+        "bounds": "40,70,100,100",
+        "arena": {
+            "name": "*.png",
+            "bounds": "10,10,50,50",
+            "around": {
+                "name": "*.png",
+                "bounds": "30,70,90,100"
+            },
+            "start": {
+                "name": "*.png",
+                "bounds": "30,30,80,100"
+            },
+            "lock": {
+                "name": "*.png",
+                "bounds": "0,50,30,100"
+            },
+            "result": {
+                "name": "*.png",
+                "bounds": "30,0,70,50"
+            },
+            "accept": {
+                "name": "*.png",
+                "bounds": "30,50,80,100"
+            },
+            "return": {
+                "name": "*.png",
+                "bounds": "0,0,30,30"
+            }
+        },
+        "norvice": {
+            "name": "*.png",
+            "bounds": "50,10,100,50"
+        }
     }
 }
