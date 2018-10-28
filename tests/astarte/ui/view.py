@@ -13,7 +13,7 @@ class CommonView(Common):
         self.device = device
         super(CommonView, self).__init__(device.module['adb'], device.module['minicap'])
 
-    def displayed(self, max_wait=10):
+    def displayed(self, max_wait=20):
         """ Exists Common View.
 
         Arguments:
@@ -22,7 +22,7 @@ class CommonView(Common):
         Returns:
             result(bool): return true if element displayed, not otherwise.
         """
-        return super(CommonView, self).wait(self.PATH['displayed'], timeout=max_wait)
+        return super(CommonView, self).wait(self.PATH['displayed'], _wait=max_wait)
 
     def open(self, target, max_wait=10):
         """ Open Children View.

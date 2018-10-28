@@ -3,27 +3,26 @@ import logging
 import pytest
 
 # pylint: disable=E0401
-from astarte.script.testcase_brown import BrownDust
+from astarte.script.testcase import Astarte
 
 logger = logging.getLogger(__name__)
 
 
 @pytest.mark.usefixtures('conftests_fixture', 'orlov_fixture', 'astarte_fixture')
 # pylint: disable=E1101, C0302, R0914
-class TestArena(BrownDust):
+class TestArena(Astarte):
     """ Test Case Base `browndust` package.
     """
 
     def test_001_arena(self):
         """ Test Arena Auto Play. """
         logger.info(' *** Start TestCase : %s *** ', __file__)
-        self.start()
-
-        logger.info(' *** Test SetUp. *** ')
-        assert self.initialize()
-
         logger.info(' *** Start Arena Battle. *** ')
-        assert self.arena()
+        arena = self.app.ui.home.arena
+        assert arena.displayed()
+        assert arena.battle_around()
 
         logger.info(' *** Wait Arena Battle Result. *** ')
-        assert self.arena_result()
+        assert arena.battle_result()
+        assert arena.return_home()
+        assert self.app.ui.home.displayed()

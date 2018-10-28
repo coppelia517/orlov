@@ -48,11 +48,15 @@
         },
         "accept": {
             "name": "*.png",
-            "bounds": "30,50,80,100"
+            "bounds": "20,50,80,100"
         },
         "return": {
             "name": "*.png",
             "bounds": "0,0,30,30"
         }
+    },
+    "norvice": {
+        "name": "*.png",
+        "bounds": "40,0,100,30"
     }
 }

@@ -104,6 +104,8 @@ class BrownDust(Astarte):
         while not self.wait('battle/arena/result', _wait=300):
             self.sleep(60, strict=True)
         assert self.wait('battle/arena/result')
+        filename = 'arena_failed_{}.png'.format(time.strftime('%Y_%m_%d_%H_%M_%S'))
+        self.screenshot(filename)
         self.tap('battle/arena/accept')
         self.sleep(4)
         self.tap('battle/arena/return')

@@ -3,6 +3,7 @@
 # pylint: disable=E0401
 from astarte.ui.browndust.home import Home
 from astarte.ui.browndust.battle import Arena
+from astarte.ui.browndust.battle import Norvice
 
 
 class SystemUI:

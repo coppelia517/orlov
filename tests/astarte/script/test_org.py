@@ -19,5 +19,7 @@ class TestOrg(AstarteBase):
         """Test something."""
         arena = self.app.ui.home.arena
         assert arena.displayed()
-
-        self.app.screenshot()
+        assert arena.battle_around()
+        assert arena.battle_result()
+        assert arena.return_home()
+        assert self.app.ui.home.displayed()
