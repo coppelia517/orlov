@@ -7,13 +7,12 @@ import configparser
 
 # pylint: disable=E0401
 from seir.utility import SCRIPT_DIR
-from seir.ui.kancolle import SystemUI
 
 logger = logging.getLogger(__name__)
 
 
-class Kancolle:
-    """ Kancolle App Utility Class
+class Application:
+    """ Application Utility Class
 
     Attributes:
         adb(Android): Android Device Interfaces.
@@ -26,8 +25,6 @@ class Kancolle:
     def __init__(self, adb, minicap):
         self.module['adb'] = adb
         self.module['minicap'] = minicap
-
-        self.ui = SystemUI(self)
         self.get_config()
 
     def start(self, workspace):
@@ -36,7 +33,7 @@ class Kancolle:
         Arguments:
             workspace(Workspace): Workspace Inerfaces.
         """
-        self.module['minicap'].start(self.module['adb'], workspace)
+        self.module['minicap'].start(self.module['adb'], workspace, self.get('args.package'))
 
     def screenshot(self, filename=None):
         """ Get ScreenShot from Minicap Process.

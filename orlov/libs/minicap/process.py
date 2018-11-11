@@ -86,14 +86,16 @@ class MinicapProc(object):
         self.module['adb'] = _adb
         self.module['workspace'] = _workspace
 
-        self.space['tmp'] = self.module['workspace'].mkdir('tmp')
+        self.module['workspace'].mkdir('tmp')
         self.space['log'] = self.module['workspace'].mkdir('log')
+
         if _package is None:
+            self.space['tmp'] = self.module['workspace'].mkdir('tmp')
             self.space['tmp.evidence'] = self.module['workspace'].mkdir('tmp\\evidence')
             self.space['tmp.reference'] = self.module['workspace'].mkdir('tmp\\reference')
             self.space['tmp.video'] = self.module['workspace'].mkdir('tmp\\video')
         else:
-            self.module['workspace'].mkdir('tmp\\%s' % _package)
+            self.space['tmp'] = self.module['workspace'].mkdir('tmp\\%s' % _package)
             self.space['tmp.evidence'] = self.module['workspace'].mkdir('tmp\\%s\\evidence' % _package)
             self.space['tmp.reference'] = self.module['workspace'].mkdir('tmp\\%s\\reference' % _package)
             self.space['tmp.video'] = self.module['workspace'].mkdir('tmp\\%s\\video' % _package)
