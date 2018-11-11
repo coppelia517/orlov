@@ -7,7 +7,7 @@ import configparser
 
 # pylint: disable=E0401
 from seir.utility import SCRIPT_DIR
-from seir.ui.browndust import SystemUI
+from seir.ui.kancolle import SystemUI
 
 logger = logging.getLogger(__name__)
 
