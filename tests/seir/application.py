@@ -25,7 +25,6 @@ class Application:
     def __init__(self, adb, minicap):
         self.module['adb'] = adb
         self.module['minicap'] = minicap
-        self.get_config()
 
     def start(self, workspace):
         """ Start Application Process.

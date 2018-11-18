@@ -1,5 +1,6 @@
 """ Type Element."""
 from typing import Dict
+from seir.common import Common
 
 
 def elements(test_ids: Dict):
@@ -32,7 +33,7 @@ def elements(test_ids: Dict):
     return deco
 
 
-class View:
+class View(Common):
     """ Android Device View.
     """
 
@@ -46,5 +47,15 @@ class View:
             self.test_id = test_id[0]
             self.page_object_type = test_id[1]
 
-    def wait_for_element(self, max_wait=30):
-        pass
+        super(View, self).__init__(device.module['adb'], device.module['minicap'])
+
+    def displayed(self, max_wait=20):
+        """ Exists View.
+
+        Arguments:
+            max_wait(int): maximum wait time for display elements(default=10sec)
+
+        Returns:
+            result(bool): return true if element displayed, not otherwise.
+        """
+        return super(View, self).wait(self.test_id, _wait=max_wait)

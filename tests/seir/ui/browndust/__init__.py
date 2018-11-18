@@ -12,3 +12,17 @@ class BrownDust(Application):
 
     def __init__(self, adb, minicap):
         super(BrownDust, self).__init__(adb, minicap)
+
+
+class SystemUI:
+    """ BrownDust System UI Manager.
+    """
+
+    def __init__(self, device):
+        self.device = device
+
+    @property
+    def home(self):
+        """ Create Home Page Object.
+        """
+        pass
