@@ -5,7 +5,7 @@ import logging
 from seir.ui import browndust
 from seir.element import elements
 
-TEST_PATH = {'home': ''}
+TEST_PATH = {'home': 'home'}
 
 
 @elements(TEST_PATH)

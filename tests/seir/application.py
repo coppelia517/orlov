@@ -34,6 +34,12 @@ class Application:
         """
         self.module['minicap'].start(self.module['adb'], workspace, self.get('args.package'))
 
+    def evidence_dir(self):
+        return self.module['minicap'].space['tmp.evidence']
+
+    def video_dir(self):
+        return self.module['minicap'].space['tmp.video']
+
     def screenshot(self, filename=None):
         """ Get ScreenShot from Minicap Process.
 
