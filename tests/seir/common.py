@@ -23,6 +23,21 @@ class Common:
         self.adb = adb
         self.minicap = minicap
 
+    def screenshot(self, filename=None):
+        """ Get ScreenShot from Minicap Process.
+
+        Arguments:
+            filename(str): get filename.
+
+        Returns:
+            filepath(str): get filepath.
+        """
+        if not filename:
+            filename = 'capture.png'
+        path = self.minicap.capture_image(filename)
+        logger.debug('Application : Get Screenshot : %s', path)
+        return path
+
     def __get_path(self, target, func='cv') -> str:
         """ Get Path.
 

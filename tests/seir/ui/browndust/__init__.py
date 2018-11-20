@@ -1,6 +1,7 @@
 """ This is utility class for BrownDust Application Tests. """
-from seir.application import Application
 
+# pylint: disable=E0401
+from seir.application import Application
 from seir.ui.browndust.home import Home
 
 

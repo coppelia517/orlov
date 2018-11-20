@@ -1,6 +1,10 @@
 """ Type Element."""
+import logging
+
 from typing import Dict
 from seir.common import Common
+
+logger = logging.getLogger(__name__)
 
 
 def elements(test_ids: Dict):
@@ -17,6 +21,7 @@ def elements(test_ids: Dict):
         """
         # pylint: disable=cell-var-from-loop
         for test_id in test_ids.keys():
+            logger.info(test_ids[test_id])
 
             def get_attr(self, test_id_param=test_ids[test_id]):
                 """ Return an Components """
@@ -27,10 +32,19 @@ def elements(test_ids: Dict):
                 return View(self.device, test_id_param, parent_element or None)
 
             prop = property(get_attr)
+            logger.info(prop)
             setattr(cls, test_id, prop)
         return cls
 
     return deco
+
+
+class Component:
+    """ Android Device Components.
+    """
+
+    def __init__(self, device):
+        self.device = device
 
 
 class View(Common):
@@ -49,8 +63,19 @@ class View(Common):
 
         super(View, self).__init__(device.module['adb'], device.module['minicap'])
 
-    def displayed(self, max_wait=20):
+    def exists(self, max_wait=20):
         """ Exists View.
+
+        Arguments:
+            max_wait(int): maximum wait time for display elements(default=20sec)
+
+        Returns:
+            result(bool): return true if element displayed, not otherwise.
+        """
+        return super(View, self).wait(self.test_id, _wait=max_wait)
+
+    def click(self, max_wait=10):
+        """ Click View.
 
         Arguments:
             max_wait(int): maximum wait time for display elements(default=10sec)
@@ -58,4 +83,4 @@ class View(Common):
         Returns:
             result(bool): return true if element displayed, not otherwise.
         """
-        return super(View, self).wait(self.test_id, _wait=max_wait)
+        return super(View, self).tap(self.test_id, _wait=max_wait)

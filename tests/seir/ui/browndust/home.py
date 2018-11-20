@@ -4,11 +4,12 @@ import logging
 # pylint: disable=E0401
 from seir.ui import browndust
 from seir.element import elements
+from seir.element import Component
 
 TEST_PATH = {'home': 'home'}
 
 
 @elements(TEST_PATH)
-class Home:
+class Home(Component):
     """ BrownDust Home View.
     """

@@ -32,5 +32,6 @@ class TestBrownDust(Seir):
         """Test something."""
         logger.info('Start : Test BrownDust.')
         self.app.sleep(5)
-        assert self.app.ui.home.displayed()
+        assert self.app.ui.home.home.exists()
+        self.app.ui.home.home.click()
         self.app.screenshot()
