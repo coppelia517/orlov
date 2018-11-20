@@ -15,7 +15,8 @@ TEST_PATH = {
     'server_taiwan': 'initial/server/taiwan',
     'server_japan': 'initial/server/japan',
     'server_asia': 'initial/server/asia',
-    'server_connect': 'initial/server/connect'
+    'server_connect': 'initial/server/connect',
+    'name': 'initial/playername'
 }
 
 
@@ -32,9 +33,11 @@ class Initial(Component):
         while self.skip.displayed(max_wait=5):
             self.skip.click(check=False)
             self.sleep(0.5, strict=True)
-        assert self.server.displayed()
-        assert self.server_taiwan.displayed()
-        self.server_taiwan.click()
-        self.sleep(1, strict=True)
-        assert self.server_connect.displayed()
-        self.server_connect.click()
+        if self.server.displayed(max_wait=5):
+            assert self.server_taiwan.displayed()
+            self.server_taiwan.click()
+            self.sleep(1, strict=True)
+            assert self.server_connect.displayed()
+            self.server_connect.click()
+        assert self.name.displayed()
+        self.name.click(check=False)
