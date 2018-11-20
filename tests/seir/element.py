@@ -1,4 +1,6 @@
 """ Type Element."""
+import time
+import random
 import logging
 
 from typing import Dict
@@ -46,6 +48,19 @@ class Component:
     def __init__(self, device):
         self.device = device
 
+    def sleep(self, base=3, strict=False):
+        """ Set Sleep Time.
+        
+        Arguments:
+            base(int): base sleep time.
+            strict(bool): set randomize.
+        """
+        if strict:
+            sleep_time = base
+        else:
+            sleep_time = (base - 0.5 * random.random())
+        time.sleep(sleep_time)
+
 
 class View(Common):
     """ Android Device View.
@@ -63,7 +78,7 @@ class View(Common):
 
         super(View, self).__init__(device.module['adb'], device.module['minicap'])
 
-    def exists(self, max_wait=20):
+    def displayed(self, max_wait=20):
         """ Exists View.
 
         Arguments:
@@ -74,7 +89,7 @@ class View(Common):
         """
         return super(View, self).wait(self.test_id, _wait=max_wait)
 
-    def click(self, max_wait=10):
+    def click(self, check=True, max_wait=10):
         """ Click View.
 
         Arguments:
@@ -83,4 +98,13 @@ class View(Common):
         Returns:
             result(bool): return true if element displayed, not otherwise.
         """
-        return super(View, self).tap(self.test_id, _wait=max_wait)
+        if check:
+            return super(View, self).tap(self.test_id, _wait=max_wait)
+        else:
+            return super(View, self).touch(self.test_id, _wait=max_wait)
+
+    def get_number(self, max_wait=20):
+        return super(View, self).number(self.test_id, timeout=max_wait)
+
+    def input_str(self, text):
+        return super(View, self).input_text(text)

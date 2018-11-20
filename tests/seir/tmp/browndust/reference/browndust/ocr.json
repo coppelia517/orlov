@@ -1,0 +1,10 @@
+{
+    "home": {
+        "settings": {
+            "reset": {
+                "name": "Data Reset",
+                "bounds": "560,275,720,315"
+            }
+        }
+    }
+}

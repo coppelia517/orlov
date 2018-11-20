@@ -61,8 +61,6 @@ class MinicapProc(object):
         self.module['service'] = _service
 
         self.space = {}
-        self.space['tmp.evidence'] = ''
-        self.space['tmp.video'] = ''
 
         self.output = Queue()
         self._loop_flag = True

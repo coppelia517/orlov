@@ -2,6 +2,7 @@
 import logging
 import pytest
 
+from seir.resource import Parser as P
 from seir.ui.browndust import BrownDust
 from seir.script.testcase import Seir
 
@@ -22,6 +23,7 @@ class TestBrownDust(Seir):
         logger.info('  BrownDust Fixture : create device instance. ')
         cls.app = BrownDust(cls.adb, request.cls.minicap)
         cls.app.set('args.package', request.cls.package)
+        P.set_package(request.cls.package)
         cls.app.get_config()
         cls.app.start(request.cls.workspace)
 
@@ -31,7 +33,12 @@ class TestBrownDust(Seir):
     def test_000_something(self):
         """Test something."""
         logger.info('Start : Test BrownDust.')
-        self.app.sleep(5)
-        assert self.app.ui.home.home.exists()
-        self.app.ui.home.home.click()
+        #self.app.sleep(5)
+        assert self.app.ui.home.displayed()
+        assert self.app.ui.home.open_settings()
+        self.app.ui.home.data_reset()
+        self.app.sleep(3, strict=True)
+        assert self.app.ui.initial.displayed(max_wait=120)
+        self.app.ui.initial.skip_prologue()
+        self.app.sleep(3, strict=True)
         self.app.screenshot()

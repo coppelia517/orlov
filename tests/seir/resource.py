@@ -5,8 +5,8 @@ import logging
 from urllib.parse import urlparse
 
 #pylint: disable=E0401
-from astarte.exception import ResourceError
-from astarte.utility import TMP_REFERENCE_DIR
+from seir.exception import ResourceError
+from seir.utility import TMP_DIR
 
 L = logging.getLogger(__name__)
 
@@ -14,6 +14,16 @@ L = logging.getLogger(__name__)
 class Parser:
     """ Resource Parser Module.
     """
+    package = 'core'
+
+    @classmethod
+    def set_package(cls, package_name):
+        cls.package = package_name
+        cls.TMP_REFERENCE_DIR = os.path.normpath(os.path.join(TMP_DIR, package_name, 'reference'))
+
+    @classmethod
+    def get_package(cls):
+        return cls.package
 
     @classmethod
     def search(cls, target, _id=None):
@@ -31,7 +41,7 @@ class Parser:
         if _id:
             target = '%s/id' % target
         info = urlparse(target)
-        base_folder = os.path.join(TMP_REFERENCE_DIR, info.netloc)
+        base_folder = os.path.join(cls.TMP_REFERENCE_DIR, info.netloc)
         if not os.path.exists(base_folder):
             raise ResourceError('Could not find base directory : %s' % info.netloc)
         for f in os.listdir(base_folder):

@@ -3,6 +3,7 @@
 # pylint: disable=E0401
 from seir.application import Application
 from seir.ui.browndust.home import Home
+from seir.ui.browndust.initial import Initial
 
 
 class BrownDust(Application):
@@ -30,3 +31,9 @@ class SystemUI:
         """ Create Home Page Object.
         """
         return Home(self.device)
+
+    @property
+    def initial(self):
+        """ Create Initial Page Object.
+        """
+        return Initial(self.device)

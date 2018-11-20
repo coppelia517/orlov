@@ -8,9 +8,9 @@ import threading
 from queue import Queue, Empty
 
 # pylint: disable=E0401
-from astarte.exception import ResourceError
-from astarte.resource import Parser as P
-from astarte.utility import POINT, TIMEOUT, WAIT_TIMEOUT, TAP_THRESHOLD
+from seir.exception import ResourceError
+from seir.resource import Parser as P
+from seir.utility import POINT, TIMEOUT, WAIT_TIMEOUT, TAP_THRESHOLD
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +22,19 @@ class Common:
     def __init__(self, adb, minicap):
         self.adb = adb
         self.minicap = minicap
+
+    def sleep(self, base=3, strict=False):
+        """ Set Sleep Time.
+        
+        Arguments:
+            base(int): base sleep time.
+            strict(bool): set randomize.
+        """
+        if strict:
+            sleep_time = base
+        else:
+            sleep_time = (base - 0.5 * random.random())
+        time.sleep(sleep_time)
 
     def screenshot(self, filename=None):
         """ Get ScreenShot from Minicap Process.
@@ -38,17 +51,18 @@ class Common:
         logger.debug('Application : Get Screenshot : %s', path)
         return path
 
-    def __get_path(self, target, func='cv') -> str:
+    def __get_path(self, target, package, func='cv') -> str:
         """ Get Path.
 
         Arguments:
             target(str): target path.
+            package(str): package name.
             func(str): function type. 'cv' or 'ocr'.
 
         Returns:
             targetpath(str): strings.
         """
-        return '%s://browndust/%s' % (func, target)
+        return '%s://%s/%s' % (func, package, target)
 
     def __area(self, width, height, bounds, func='cv') -> POINT:
         """ get area function.
@@ -115,7 +129,7 @@ class Common:
             name(str): target name.
             area(POINT): target area bounds.
         """
-        path, name, bounds = P.search(self.__get_path(location, func), _num)
+        path, name, bounds = P.search(self.__get_path(location, P.get_package(), func), _num)
         if _id:
             name = name % str(_id)
         if not path:
@@ -127,7 +141,7 @@ class Common:
                 area = self.__area(w, h, bounds, func)
             else:
                 area = self.__area(h, w, bounds, func)
-        logger.debug('Search : %s', self.__get_path(location, func))
+        logger.debug('Search : %s', self.__get_path(location, P.get_package(), func))
         return path, name, area
 
     def exists(self, location, _id=None, area=None, timeout=TIMEOUT) -> bool:
@@ -324,6 +338,15 @@ class Common:
             x = self.normalize_w(result.x)
             y = self.normalize_h(result.y)
         self.adb.tap(x, y)
+
+    def input_text(self, text):
+        """ Text Input for Android.
+
+        Arguments:
+            text(str): input text.
+        """
+        self.adb.text(text)
+        self.adb.keyevent(self.adb.get().KEYCODE_ENTER)
 
     def normalize(self, base: int, real: int, virtual: int) -> int:
         """ Normalize Method.
