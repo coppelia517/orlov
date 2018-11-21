@@ -25,7 +25,7 @@ class Common:
 
     def sleep(self, base=3, strict=False):
         """ Set Sleep Time.
-        
+
         Arguments:
             base(int): base sleep time.
             strict(bool): set randomize.
@@ -208,7 +208,7 @@ class Common:
         Returns:
             result(bool): return result.
         """
-        logger.info('Wait Start : %s - Timeout : %s', self.__get_path(location, 'cv'), _wait)
+        logger.debug('Wait Start : %s - Timeout : %s', self.__get_path(location, P.get_package(), 'cv'), _wait)
         try:
             self._wait_loop_flag = True
             start = time.time()
