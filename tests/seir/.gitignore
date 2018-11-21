@@ -1,4 +1,6 @@
 tmp/**/evidence
 tmp/**/video
-tmp/**/*.png
-!tmp/**/reference
+tmp/**/capture.png
+tmp/**/crop_ocr.png
+tmp/**/crop.png
+tmp/**/wait*.png

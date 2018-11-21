@@ -106,5 +106,5 @@ class View(Common):
     def get_number(self, max_wait=20):
         return super(View, self).number(self.test_id, timeout=max_wait)
 
-    def input_str(self, text):
-        return super(View, self).input_text(text)
+    def input_str(self, text, cr=True):
+        return super(View, self).input_text(text, cr)

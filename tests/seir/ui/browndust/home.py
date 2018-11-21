@@ -18,7 +18,9 @@ TEST_PATH = {
     'settings_reset_text': 'home/settings/reset/text',
     'settings_reset_text_ok': 'home/settings/reset/text/ok',
     'settings_reset_ok': 'home/settings/reset/ok',
-    'settings_reset_cancel': 'home/settings/reset/cancel'
+    'settings_reset_cancel': 'home/settings/reset/cancel',
+    'login_initial': 'home/login/initial',
+    'login_close': 'home/login/close'
 }
 
 
@@ -75,4 +77,27 @@ class Home(Component):
         self.settings_reset_text_ok.click()
         assert self.settings_reset_ok.displayed(), 'Home - Settings - Reset : Not Reset OK Button Displayed.'
         self.settings_reset_ok.click(check=False)
+        return True
+
+    def close_login_information(self):
+        """ Close Login Information Windows.
+
+        Returns:
+            result(bool): executed close login windows.
+        """
+        assert self.login_initial.displayed(max_wait=120), 'Home - Login - Initial : Not Displayed.'
+        assert self.login_close.displayed(), 'Home - Login - Close : Not Displayed.'
+        self.login_close.click(check=False)
+        assert self.login_close.displayed(), 'Home - Login - Close : Not Displayed.'
+        self.login_close.click(check=False)
+        self.sleep(2, strict=True)
+        assert self.login_close.displayed(), 'Home - Login - Close : Not Displayed.'
+        self.login_close.click(check=False)
+        assert self.login_close.displayed(), 'Home - Login - Close : Not Displayed.'
+        self.login_close.click(check=False)
+        self.sleep(2, strict=True)
+        assert self.login_close.displayed(), 'Home - Login - Close : Not Displayed.'
+        self.login_close.click(check=False)
+        assert self.login_close.displayed(), 'Home - Login - Close : Not Displayed.'
+        self.login_close.click(check=False)
         return True

@@ -2,6 +2,16 @@
     "home": {
         "name": "*.png",
         "bounds": "70,70,100,100",
+        "login": {
+            "initial": {
+                "name": "*.png",
+                "bounds": "20,10,80,90"
+            },
+            "close": {
+                "name": "*.png",
+                "bounds": "5,5,95,95"
+            }
+        },
         "settings": {
             "name": "*.png",
             "bounds": "50,0,100,50",
@@ -52,6 +62,14 @@
             "name": "*.png",
             "bounds": "70,70,100,100"
         },
+        "close": {
+            "name": "*.png",
+            "bounds": "70,70,100,100"
+        },
+        "erin": {
+            "name": "*.png",
+            "bounds": "0,0,50,100"
+        },
         "server": {
             "name": "*.png",
             "bounds": "30,20,70,50",
@@ -74,15 +92,45 @@
         },
         "playername": {
             "name": "*.png",
-            "bounds": "10,30,90,70"
+            "bounds": "10,30,90,70",
+            "keyboard": {
+                "name": "*.png",
+                "bounds": "0,70,40,100"
+            },
+            "delete": {
+                "name": "*.png",
+                "bounds": "60,60,100,100"
+            },
+            "check": {
+                "name": "*.png",
+                "bounds": "60,0,100,50"
+            },
+            "title": {
+                "name": "*.png",
+                "bounds": "30,20,70,80"
+            },
+            "cancel": {
+                "name": "*.png",
+                "bounds": "10,50,60,80"
+            },
+            "ok": {
+                "name": "*.png",
+                "bounds": "40,50,90,80"
+            }
         }
     },
     "quest": {
-        "name": "*.png",
-        "bounds": "0,0,50,30",
-        "clear": {
+        "title": {
             "name": "*.png",
-            "bounds": "30,50,70,100"
+            "bounds": "0,0,50,30"
+        },
+        "select": {
+            "name": "*.png",
+            "bounds": "30,50,90,100"
+        },
+        "return": {
+            "name": "*.png",
+            "bounds": "0,0,40,30"
         }
     },
     "battle": {

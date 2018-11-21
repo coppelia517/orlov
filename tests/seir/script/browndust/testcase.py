@@ -29,16 +29,3 @@ class TestBrownDust(Seir):
 
         request.cls.evidence_dir = cls.app.evidence_dir()
         request.cls.video_dir = cls.app.video_dir()
-
-    def test_000_something(self):
-        """Test something."""
-        logger.info('Start : Test BrownDust.')
-        #self.app.sleep(5)
-        assert self.app.ui.home.displayed()
-        assert self.app.ui.home.open_settings()
-        self.app.ui.home.data_reset()
-        self.app.sleep(3, strict=True)
-        assert self.app.ui.initial.displayed(max_wait=120)
-        self.app.ui.initial.skip_prologue()
-        self.app.sleep(3, strict=True)
-        self.app.screenshot()

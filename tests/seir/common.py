@@ -227,7 +227,7 @@ class Common:
             self._wait_loop_flag = False
             self.loop.join()
             filename = 'wait_failed_{}.png'.format(time.strftime('%Y_%m_%d_%H_%M_%S'))
-            self.screenshot(filename)
+            # self.screenshot(filename)
             return False
         else:
             self._wait_loop_flag = False
@@ -339,14 +339,15 @@ class Common:
             y = self.normalize_h(result.y)
         self.adb.tap(x, y)
 
-    def input_text(self, text):
+    def input_text(self, text, cr=True):
         """ Text Input for Android.
 
         Arguments:
             text(str): input text.
         """
         self.adb.text(text)
-        self.adb.keyevent(self.adb.get().KEYCODE_ENTER)
+        if cr:
+            self.adb.keyevent(self.adb.get().KEYCODE_ENTER)
 
     def normalize(self, base: int, real: int, virtual: int) -> int:
         """ Normalize Method.

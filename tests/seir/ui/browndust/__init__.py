@@ -2,8 +2,11 @@
 
 # pylint: disable=E0401
 from seir.application import Application
+
 from seir.ui.browndust.home import Home
 from seir.ui.browndust.initial import Initial
+from seir.ui.browndust.quest import Quest
+from seir.ui.browndust.battle import Battle
 
 
 class BrownDust(Application):
@@ -37,3 +40,15 @@ class SystemUI:
         """ Create Initial Page Object.
         """
         return Initial(self.device)
+
+    @property
+    def quest(self):
+        """ Create Quest Page Object.
+        """
+        return Quest(self.device)
+
+    @property
+    def battle(self):
+        """ Create Battle Page Object.
+        """
+        return Battle(self.device)
