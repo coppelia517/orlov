@@ -1,3 +1,4 @@
 tmp/**/evidence
 tmp/**/video
 tmp/**/*.png
+!tmp/**/reference
