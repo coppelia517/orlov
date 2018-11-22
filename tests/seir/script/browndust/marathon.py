@@ -1,7 +1,7 @@
 """ Script for orlov seir browndust package. """
 import logging
-import pytest
 
+# pylint: disable=E0401
 from seir.script.browndust.testcase import TestBrownDust
 
 logger = logging.getLogger(__name__)

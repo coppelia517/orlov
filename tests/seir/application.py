@@ -35,9 +35,19 @@ class Application:
         self.module['minicap'].start(self.module['adb'], workspace, self.get('args.package'))
 
     def evidence_dir(self):
+        """ Get Evidence Directory
+
+        Returns:
+            path(str): evidence directory path.
+        """
         return self.module['minicap'].space['tmp.evidence']
 
     def video_dir(self):
+        """ Get Video Directory
+
+        Returns:
+            path(str): video directory path.
+        """
         return self.module['minicap'].space['tmp.video']
 
     def screenshot(self, filename=None):
@@ -45,7 +55,7 @@ class Application:
 
         Arguments:
             filename(str): get filename.
-        
+
         Returns:
             filepath(str): get filepath.
         """
@@ -57,7 +67,7 @@ class Application:
 
     def sleep(self, base=3, strict=False):
         """ Set Sleep Time.
-        
+
         Arguments:
             base(int): base sleep time.
             strict(bool): set randomize.

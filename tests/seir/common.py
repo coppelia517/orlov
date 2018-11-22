@@ -227,7 +227,7 @@ class Common:
             self._wait_loop_flag = False
             self.loop.join()
             filename = 'wait_failed_{}.png'.format(time.strftime('%Y_%m_%d_%H_%M_%S'))
-            # self.screenshot(filename)
+            self.screenshot(filename)
             return False
         else:
             self._wait_loop_flag = False
@@ -344,6 +344,7 @@ class Common:
 
         Arguments:
             text(str): input text.
+            cr(bool): set keycode enter.
         """
         self.adb.text(text)
         if cr:

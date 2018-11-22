@@ -18,11 +18,21 @@ class Parser:
 
     @classmethod
     def set_package(cls, package_name):
+        """ Set Package Name.
+
+        Arguments:
+            package_name(str): package name.
+        """
         cls.package = package_name
         cls.TMP_REFERENCE_DIR = os.path.normpath(os.path.join(TMP_DIR, package_name, 'reference'))
 
     @classmethod
     def get_package(cls):
+        """ Get Package Name.
+
+        Returns:
+            package_name(str): get package name.
+        """
         return cls.package
 
     @classmethod

@@ -3,6 +3,7 @@ import os
 import logging
 import pytest
 
+# pylint: disable=E0401
 from orlov.libs.adb import AndroidFactory
 from seir.utility import PROFILE_DIR, SCRIPT_DIR
 
@@ -21,7 +22,7 @@ class Seir:
         logger.info(' SEIR Fixture : setup the testcase. ')
 
         package = cls.__package(request)
-        logger.info(' SEIR Fixture : get package name : %s.' % package)
+        logger.info(' SEIR Fixture : get package name : %s.', package)
         request.cls.package = package
 
         logger.info(' SEIR Fixture : cleanup evidence folder. ')

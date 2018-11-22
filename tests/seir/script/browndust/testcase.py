@@ -2,6 +2,7 @@
 import logging
 import pytest
 
+# pylint: disable=E0401
 from seir.resource import Parser as P
 from seir.ui.browndust import BrownDust
 from seir.script.testcase import Seir
@@ -20,12 +21,13 @@ class TestBrownDust(Seir):
     # pylint: disable=E1101
     def browndust_fixture(cls, request):
         """ fixture executed once for the test suite """
-        logger.info('  BrownDust Fixture : create device instance. ')
+        logger.info('BrownDust Fixture : create device instance. ')
         cls.app = BrownDust(cls.adb, request.cls.minicap)
         cls.app.set('args.package', request.cls.package)
         P.set_package(request.cls.package)
         cls.app.get_config()
         cls.app.start(request.cls.workspace)
 
+        logger.info('BrownDust Fixture : set temporary directory. ')
         request.cls.evidence_dir = cls.app.evidence_dir()
         request.cls.video_dir = cls.app.video_dir()

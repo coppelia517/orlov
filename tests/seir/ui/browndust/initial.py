@@ -2,7 +2,6 @@
 import logging
 
 # pylint: disable=E0401
-from seir.ui import browndust
 from seir.element import elements
 from seir.element import Component
 
@@ -34,11 +33,19 @@ class Initial(Component):
     """
 
     def displayed(self, max_wait=20):
+        """ Displayed Initial UI Component.
+
+        Arguments:
+            max_wait(int): max wait time.
+
+        Returns:
+            result(bool): displayed Initial Components.
+        """
         return self.eclipse.displayed(max_wait=max_wait)
 
     def skip_prologue(self):
         """ Skip Prologue.
-        
+
         Returns:
             result(bool): displayed User Name.
         """
@@ -61,7 +68,7 @@ class Initial(Component):
 
         Arguments:
             player_name(str): set player name
-        
+
         Returns:
             result(bool): Set Player Name.
         """
@@ -80,7 +87,7 @@ class Initial(Component):
 
     def get_member(self):
         """ Get Member.
-    
+
         Returns:
             result(bool): Return Home Screen.
         """

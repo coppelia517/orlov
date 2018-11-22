@@ -3,6 +3,7 @@ import time
 import random
 import logging
 
+# pylint: disable=E0401
 from typing import Dict
 from seir.common import Common
 
@@ -15,7 +16,7 @@ def elements(test_ids: Dict):
     Arguments:
         test_ids(Dict): Dictionary.
     Returns:
-        Class with properties named by values in the test_ids dictionary
+        PageObject(View): Class with properties named by values in the test_ids dictionary
     """
 
     def deco(cls):
@@ -50,7 +51,7 @@ class Component:
 
     def sleep(self, base=3, strict=False):
         """ Set Sleep Time.
-        
+
         Arguments:
             base(int): base sleep time.
             strict(bool): set randomize.
@@ -93,6 +94,7 @@ class View(Common):
         """ Click View.
 
         Arguments:
+            check(bool): after click, check pattern match result.
             max_wait(int): maximum wait time for display elements(default=10sec)
 
         Returns:
@@ -104,7 +106,24 @@ class View(Common):
             return super(View, self).touch(self.test_id, _wait=max_wait)
 
     def get_number(self, max_wait=20):
+        """ Get Number for ocr module.
+
+        Arguments:
+            max_wait(int): maximum wait time for display elements(default=20sec)
+
+        Returns:
+            number(int): target strings.
+        """
         return super(View, self).number(self.test_id, timeout=max_wait)
 
     def input_str(self, text, cr=True):
+        """ Input Text.
+
+        Arguments:
+            text(str): input target text.
+            cr(bool): enter key.
+
+        Returns:
+            result(bool): return true if element displayed, not otherwise.
+        """
         return super(View, self).input_text(text, cr)

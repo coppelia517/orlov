@@ -28,7 +28,7 @@ class Quest(Component):
 
     def select_quest(self):
         """ Select Quest.
-        
+
         Returns:
             result(bool): select quest.
         """
