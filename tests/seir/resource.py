@@ -60,7 +60,10 @@ class Parser:
                     data = json.load(jf)
                     result = Parser.query(data, info.path)
                     if not result:
-                        ResourceError('Could not find target Infomation : %s' % info.path)
+                        result = {}
+                        result['name'] = '*.png'
+                        result['bounds'] = '0,0,100,100'
+                        #ResourceError('Could not find target Infomation : %s' % info.path)
                     return Parser.path(base_folder, info.path, _id), result['name'], result['bounds']
         L.warning('Could not Found Resource.')
         return None, None, None

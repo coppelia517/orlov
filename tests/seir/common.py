@@ -192,10 +192,10 @@ class Common:
             if self.exists(location, _id, area, timeout):
                 self.wait_queue.put(True)
                 break
-            time.sleep(3)
+            time.sleep(1)
 
     #pylint: disable=W0201
-    def wait(self, location, _id=None, area=None, timeout=TIMEOUT, _wait=WAIT_TIMEOUT) -> bool:
+    def wait(self, location, _id=None, area=None, timeout=TIMEOUT, _wait=WAIT_TIMEOUT, capture=False) -> bool:
         """ Pattern Match Method.
 
         Arguments:
@@ -204,6 +204,7 @@ class Common:
             area(tuple): target area bounds.
             timeout(int): timeout count.
             _wait(int): wait limit time.
+            capture(bool): capture mode.
 
         Returns:
             result(bool): return result.
@@ -223,11 +224,12 @@ class Common:
             self.loop.start()
             return self.wait_queue.get(timeout=_wait)
         except Empty:
-            logger.warning('Wait Timeout.')
+            logger.warning('Wait Timeout. : %s ', self.__get_path(location, P.get_package(), 'cv'))
             self._wait_loop_flag = False
             self.loop.join()
-            filename = 'wait_failed_{}.png'.format(time.strftime('%Y_%m_%d_%H_%M_%S'))
-            self.screenshot(filename)
+            if capture:
+                filename = 'wait_failed_{}.png'.format(time.strftime('%Y_%m_%d_%H_%M_%S'))
+                self.screenshot(filename)
             return False
         else:
             self._wait_loop_flag = False

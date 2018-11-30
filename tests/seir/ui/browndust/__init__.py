@@ -7,6 +7,8 @@ from seir.ui.browndust.home import Home
 from seir.ui.browndust.initial import Initial
 from seir.ui.browndust.quest import Quest
 from seir.ui.browndust.battle import Battle
+from seir.ui.browndust.story import Story
+from seir.ui.browndust.scout import Scout
 
 
 class BrownDust(Application):
@@ -52,3 +54,15 @@ class SystemUI:
         """ Create Battle Page Object.
         """
         return Battle(self.device)
+
+    @property
+    def story(self):
+        """ Create Story Page Object.
+        """
+        return Story(self.device)
+
+    @property
+    def scout(self):
+        """ Create Scout Page Object.
+        """
+        return Scout(self.device)

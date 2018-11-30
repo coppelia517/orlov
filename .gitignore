@@ -108,3 +108,6 @@ tests/**/tmp/**/evidence.*
 tests/**/tmp/**/video
 tests/**/report
 .lockfile
+
+requirements*.txt
+vendor/*

@@ -10,10 +10,9 @@ TMP_DIR = os.path.normpath(os.path.join(WORK_DIR, 'tmp'))
 SCRIPT_DIR = os.path.normpath(os.path.join(WORK_DIR, 'script'))
 PROFILE_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, 'profile'))
 
-TIMEOUT = 20
 TAP_THRESHOLD = 0.2
-TIMEOUT = 20
-WAIT_TIMEOUT = 60
+TIMEOUT = 5
+WAIT_TIMEOUT = 20
 
 
 class POINT(object):

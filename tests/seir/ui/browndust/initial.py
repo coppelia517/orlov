@@ -12,6 +12,7 @@ TEST_PATH = {
     'skip': 'initial/skip',
     'close': 'initial/close',
     'server': 'initial/sever',
+    'server_alert': 'initial/server/alert',
     'server_taiwan': 'initial/server/taiwan',
     'server_japan': 'initial/server/japan',
     'server_asia': 'initial/server/asia',
@@ -55,12 +56,14 @@ class Initial(Component):
             self.skip.click(check=False)
             self.sleep(0.5, strict=True)
 
-        if self.server.displayed(max_wait=5):
-            assert self.server_taiwan.displayed(), 'Initial - Server : Not Displayed.'
-            self.server_taiwan.click()
-            self.sleep(1, strict=True)
-            assert self.server_connect.displayed(), 'Initial - Server : Not Button Displayed.'
-            self.server_connect.click()
+        #if self.server_alert.displayed(max_wait=5):
+        #    self.server_alert.click(check=False)
+        #if self.server.displayed(max_wait=5):
+        #    assert self.server_taiwan.displayed(), 'Initial - Server : Not Displayed.'
+        #    self.server_taiwan.click()
+        #    self.sleep(1, strict=True)
+        #    assert self.server_connect.displayed(), 'Initial - Server : Not Button Displayed.'
+        #    self.server_connect.click()
         return self.name.displayed()
 
     def set_player_name(self, player_name):
